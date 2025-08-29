@@ -1,4 +1,4 @@
-package com.khi.securityservice.gateway.dto.form;
+package com.khi.securityservice.gateway.principal;
 
 import com.khi.securityservice.gateway.entity.SecurityUserPrincipalEntity;
 import org.springframework.security.core.GrantedAuthority;

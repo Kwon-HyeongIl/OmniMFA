@@ -1,6 +1,6 @@
 package com.khi.securityservice.gateway.service;
 
-import com.khi.securityservice.gateway.dto.form.UserPrincipal;
+import com.khi.securityservice.gateway.principal.UserPrincipal;
 import com.khi.securityservice.gateway.entity.SecurityUserPrincipalEntity;
 import com.khi.securityservice.gateway.entity.UserEntity;
 import com.khi.securityservice.gateway.repository.UserRepository;

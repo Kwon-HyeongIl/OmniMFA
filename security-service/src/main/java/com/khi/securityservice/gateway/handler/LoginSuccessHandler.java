@@ -2,7 +2,7 @@ package com.khi.securityservice.gateway.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.khi.securityservice.common.api.ApiResponse;
-import com.khi.securityservice.gateway.dto.form.UserPrincipal;
+import com.khi.securityservice.gateway.principal.UserPrincipal;
 import com.khi.securityservice.gateway.enumeration.JwtTokenType;
 import com.khi.securityservice.gateway.util.JwtUtil;
 import jakarta.servlet.ServletException;

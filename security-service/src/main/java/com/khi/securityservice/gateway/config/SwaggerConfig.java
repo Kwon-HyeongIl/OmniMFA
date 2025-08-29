@@ -21,7 +21,7 @@ public class SwaggerConfig {
                 .title("OmniMFA Security API")
                 .description("OmniMFA 보안 서비스 관련 RESTful API 명세서입니다.")
                 .contact(new Contact()
-                        .name("개발자")
+                        .name("Kwon HyeongIl")
                         .email("llioopv@naver.com"))
                 .license(new License()
                         .name("Apache 2.0")
