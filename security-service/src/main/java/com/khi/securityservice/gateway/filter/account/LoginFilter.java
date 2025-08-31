@@ -25,6 +25,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
+        log.info("LoginFilter 실행");
+
         String loginId = obtainUsername(request);
         String password = obtainPassword(request);
 

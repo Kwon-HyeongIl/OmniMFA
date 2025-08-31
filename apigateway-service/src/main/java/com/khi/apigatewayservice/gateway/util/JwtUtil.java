@@ -1,6 +1,6 @@
-package com.khi.securityservice.gateway.util;
+package com.khi.apigatewayservice.gateway.util;
 
-import com.khi.securityservice.gateway.enumeration.JwtTokenType;
+import com.khi.apigatewayservice.gateway.enumeration.JwtTokenType;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

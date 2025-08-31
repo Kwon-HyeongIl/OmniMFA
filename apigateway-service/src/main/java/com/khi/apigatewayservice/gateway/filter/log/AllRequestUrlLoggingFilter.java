@@ -1,4 +1,4 @@
-package com.khi.apigatewayservice.filter;
+package com.khi.apigatewayservice.gateway.filter.log;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;

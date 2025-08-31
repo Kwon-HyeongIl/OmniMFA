@@ -42,7 +42,7 @@ public class JwtReissueFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        log.info("Access 토큰 재발급 필터 실행");
+        log.info("JwtReissueFilter 실행");
 
         String refreshToken = null;
 

@@ -92,8 +92,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/v3/api-docs/swagger-config").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v3/api-docs").permitAll()
 
-                        /* AWS */
-                        .requestMatchers(HttpMethod.GET, "/security/health").permitAll()
+//                        /* AWS */
+//                        .requestMatchers(HttpMethod.GET, "/security/health").permitAll()
 
                         .requestMatchers("/security/admin").hasRole("ADMIN")
 

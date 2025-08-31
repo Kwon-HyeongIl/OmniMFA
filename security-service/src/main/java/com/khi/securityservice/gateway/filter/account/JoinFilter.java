@@ -40,6 +40,8 @@ public class JoinFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        log.info("JoinFilter 실행");
+
         Map<String, String> body = objectMapper.readValue(request.getInputStream(), Map.class);
 
         String loginId = body.get("loginId");
