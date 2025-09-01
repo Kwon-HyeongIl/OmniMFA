@@ -1,9 +1,9 @@
 package com.khi.securityservice.core.repository;
 
-import com.khi.securityservice.core.entity.UserEntity;
+import com.khi.securityservice.core.entity.domain.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<UserEntity, Integer> {
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Boolean existsByLoginId(String loginId);
 

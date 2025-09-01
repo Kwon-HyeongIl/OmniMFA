@@ -1,6 +1,6 @@
 package com.khi.securityservice.core.principal;
 
-import com.khi.securityservice.core.entity.SecurityUserPrincipalEntity;
+import com.khi.securityservice.core.entity.security.SecurityUserPrincipalEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -42,7 +42,7 @@ public class SecurityUserPrincipal implements UserDetails {
     @Override
     public String getPassword() {
 
-        return "";
+        return securityUserPrincipalEntity.getPassword();
     }
 
     @Override

@@ -1,9 +1,6 @@
-package com.khi.securityservice.core.entity;
+package com.khi.securityservice.core.entity.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +11,7 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     private String loginId;
     private String password;
@@ -22,4 +19,7 @@ public class UserEntity {
 
     private String nickname;
     private String realName;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private ProductEntity product;
 }

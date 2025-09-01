@@ -1,8 +1,8 @@
 package com.khi.securityservice.core.service;
 
 import com.khi.securityservice.core.principal.SecurityUserPrincipal;
-import com.khi.securityservice.core.entity.SecurityUserPrincipalEntity;
-import com.khi.securityservice.core.entity.UserEntity;
+import com.khi.securityservice.core.entity.security.SecurityUserPrincipalEntity;
+import com.khi.securityservice.core.entity.domain.UserEntity;
 import com.khi.securityservice.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +11,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/*
+ 사용자가 입력한 비밀번호와, 여기서 DB에서 가져온 비밀번호를 스프링 시큐리티가 자체적으로 검증
+ (SecurityConfig에 등록한 PasswordEncoder를 스프링 시큐리티가 자체적으로 사용해서 비교)
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

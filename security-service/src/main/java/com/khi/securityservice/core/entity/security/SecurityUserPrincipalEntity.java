@@ -1,4 +1,4 @@
-package com.khi.securityservice.core.entity;
+package com.khi.securityservice.core.entity.security;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,5 +8,6 @@ import lombok.Setter;
 public class SecurityUserPrincipalEntity {
 
     private String loginId;
+    private String password;
     private String role;
 }

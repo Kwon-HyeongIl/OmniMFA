@@ -8,5 +8,6 @@ import lombok.Setter;
 public class SecurityUserPrincipalEntity {
 
     private String loginId;
+    private String password;
     private String role;
 }

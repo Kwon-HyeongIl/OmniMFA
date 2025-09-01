@@ -2,7 +2,7 @@ package com.khi.securityservice.core.filter.account;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.khi.securityservice.common.api.ApiResponse;
-import com.khi.securityservice.core.entity.UserEntity;
+import com.khi.securityservice.core.entity.domain.UserEntity;
 import com.khi.securityservice.core.exception.type.SecurityAuthenticationException;
 import com.khi.securityservice.core.repository.UserRepository;
 import jakarta.servlet.FilterChain;
@@ -21,13 +21,12 @@ import java.io.IOException;
 import java.util.Map;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class JoinFilter extends OncePerRequestFilter {
 
     private final UserRepository userRepository;
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     private final ObjectMapper objectMapper;
 
@@ -55,7 +54,7 @@ public class JoinFilter extends OncePerRequestFilter {
         UserEntity user = new UserEntity();
 
         user.setLoginId(loginId);
-        user.setPassword(bCryptPasswordEncoder.encode(password));
+        user.setPassword(passwordEncoder.encode(password));
         user.setRole("ROLE_ADMIN");
 
         userRepository.save(user);

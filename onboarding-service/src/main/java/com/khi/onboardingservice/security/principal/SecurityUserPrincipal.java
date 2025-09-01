@@ -42,7 +42,7 @@ public class SecurityUserPrincipal implements UserDetails {
     @Override
     public String getPassword() {
 
-        return "";
+        return securityUserPrincipalEntity.getPassword();
     }
 
     @Override

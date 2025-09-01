@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class JwtReissueFilter extends OncePerRequestFilter {
 

@@ -1,5 +1,6 @@
 package com.khi.securityservice.core.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.khi.securityservice.core.exception.RestAccessDeniedHandler;
 import com.khi.securityservice.core.exception.RestAuthenticationEntryPoint;
 import com.khi.securityservice.core.filter.account.JoinFilter;
@@ -7,16 +8,21 @@ import com.khi.securityservice.core.filter.account.LoginFilter;
 import com.khi.securityservice.core.filter.jwt.JwtLogoutFilter;
 import com.khi.securityservice.core.filter.jwt.JwtReissueFilter;
 import com.khi.securityservice.core.handler.LoginSuccessHandler;
+import com.khi.securityservice.core.repository.UserRepository;
+import com.khi.securityservice.core.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 
@@ -27,11 +33,14 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
 
-    private final JoinFilter joinFilter;
-    private final JwtReissueFilter jwtReissueFilter;
-    private final JwtLogoutFilter jwtLogoutFilter;
-
     private final LoginSuccessHandler loginSuccessHandler;
+
+    /* 필터 의존성 */
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final ObjectMapper objectMapper;
+    private final JwtUtil jwtUtil;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -55,11 +64,11 @@ public class SecurityConfig {
                         .accessDeniedHandler(new RestAccessDeniedHandler())
                 );
 
-        // Form 회원 가입 필터
+        // 회원 가입 필터
         http
-                .addFilterBefore(joinFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterAfter(joinFilter(), ExceptionTranslationFilter.class);
 
-        // Form 로그인 필터
+        // 로그인 필터
         LoginFilter loginFilter = new LoginFilter(authenticationConfiguration.getAuthenticationManager());
         loginFilter.setFilterProcessesUrl("/security/login");
         loginFilter.setUsernameParameter("loginId");
@@ -70,11 +79,11 @@ public class SecurityConfig {
 
         // Access 토큰 재발급 필터 삽입
         http
-                .addFilterBefore(jwtReissueFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterAfter(jwtReissueFilter(), ExceptionTranslationFilter.class);
 
         // 로그아웃 필터 삽입
         http
-                .addFilterAt(jwtLogoutFilter, LogoutFilter.class);
+                .addFilterAt(jwtLogoutFilter(), LogoutFilter.class);
 
         // 경로별 인가 작업
         http
@@ -105,6 +114,24 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
+    }
+
+    @Bean
+    public JoinFilter joinFilter() {
+
+        return new JoinFilter(userRepository, passwordEncoder, objectMapper);
+    }
+
+    @Bean
+    public JwtReissueFilter jwtReissueFilter() {
+
+        return new JwtReissueFilter(jwtUtil, redisTemplate, objectMapper);
+    }
+
+    @Bean
+    public JwtLogoutFilter jwtLogoutFilter() {
+
+        return new JwtLogoutFilter(jwtUtil, redisTemplate, objectMapper);
     }
 }
 
