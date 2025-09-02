@@ -25,12 +25,12 @@ public class SecurityGatewayFilter extends OncePerRequestFilter {
 
         log.info("SecurityGatewayFilter 실행");
 
-        String loginId = request.getHeader("Login-Id");
+        String uid = request.getHeader("Uid");
         String role = request.getHeader("Role");
 
         SecurityUserPrincipalEntity userPrincipalEntity = new SecurityUserPrincipalEntity();
 
-        userPrincipalEntity.setLoginId(loginId);
+        userPrincipalEntity.setUid(uid);
         userPrincipalEntity.setRole(role);
 
         UserDetails userDetails = new SecurityUserPrincipal(userPrincipalEntity);

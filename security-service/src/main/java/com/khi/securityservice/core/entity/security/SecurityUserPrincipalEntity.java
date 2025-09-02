@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class SecurityUserPrincipalEntity {
 
-    private String loginId;
+    private String uid;
     private String password;
     private String role;
 }

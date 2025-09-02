@@ -91,12 +91,12 @@ public class JwtValidateFilter implements GlobalFilter {
 
         log.info("Access 토큰 검증 완료");
 
-        String loginId = jwtUtil.getLoginId(accessToken);
+        String uid = jwtUtil.getUid(accessToken);
         String role = jwtUtil.getRole(accessToken);
 
         // 인증 정보를 마이크로 서비스로 송신
         ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
-                .header("Login-Id", loginId)
+                .header("Uid", uid)
                 .header("Role", role)
                 .build();
 

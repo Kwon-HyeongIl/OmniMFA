@@ -40,6 +40,9 @@ dependencies {
 	/* Kafka */
 	implementation 'org.springframework.kafka:spring-kafka'
 
+	/* Secret */
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
+
 	/* Lombok */
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'

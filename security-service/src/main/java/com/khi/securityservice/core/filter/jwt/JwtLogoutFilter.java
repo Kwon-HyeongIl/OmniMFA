@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -80,9 +79,9 @@ public class JwtLogoutFilter extends OncePerRequestFilter {
         }
 
         // DB에 Refresh 토큰이 존재하는지 검증
-        String loginId = jwtUtil.getLoginId(refreshToken);
+        String uid = jwtUtil.getUid(refreshToken);
 
-        Object redisRefreshToken = redisTemplate.opsForValue().get(loginId);
+        Object redisRefreshToken = redisTemplate.opsForValue().get(uid);
 
         if (redisRefreshToken == null || !redisRefreshToken.toString().equals(refreshToken)) {
 
@@ -92,7 +91,7 @@ public class JwtLogoutFilter extends OncePerRequestFilter {
         log.info("Refresh 토큰 검증 완료");
 
         // Redis에 기존에 존재하는 Refresh 토큰 삭제
-        redisTemplate.delete(loginId);
+        redisTemplate.delete(uid);
 
         log.info("Redis에서 Refresh 토큰 삭제 완료");
 

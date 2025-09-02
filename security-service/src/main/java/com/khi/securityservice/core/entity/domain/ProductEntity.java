@@ -17,6 +17,5 @@ public class ProductEntity {
     private UserEntity user;
 
     private String productName;
-    private String productUrl;
     private String productDescription;
 }

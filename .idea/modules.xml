@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/OmniMFA.iml" filepath="$PROJECT_DIR$/.idea/OmniMFA.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/security-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/security-service.main.iml" />
     </modules>
   </component>
 </project>

@@ -42,7 +42,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
         SecurityUserPrincipal userDetails = (SecurityUserPrincipal) authentication.getPrincipal();
 
-        String loginId = userDetails.getUsername();
+        String uid = userDetails.getUsername();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -51,11 +51,11 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         String role = auth.getAuthority();
 
         // 토큰 생성
-        String accessToken = jwtUtil.createJwt(JwtTokenType.ACCESS, loginId, role, 600_000L);
-        String refreshToken = jwtUtil.createJwt(JwtTokenType.REFRESH, loginId, role, 86_400_000L);
+        String accessToken = jwtUtil.createJwt(JwtTokenType.ACCESS, uid, role, 600_000L);
+        String refreshToken = jwtUtil.createJwt(JwtTokenType.REFRESH, uid, role, 86_400_000L);
 
         // Redis에 Refresh 토큰 저장
-        redisTemplate.opsForValue().set(loginId, refreshToken, 86_400_000L, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(uid, refreshToken, 86_400_000L, TimeUnit.MILLISECONDS);
 
         log.info("Redis에 Refresh 토큰 저장 완료");
 
