@@ -6,6 +6,5 @@ import lombok.Data;
 public class EnrollRequestDto {
 
     private String productName;
-    private String productUrl;
     private String productDescription;
 }

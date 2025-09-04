@@ -20,7 +20,7 @@ public class OnBoardingService {
 
     private static final String TOPIC_NAME = "product-enroll-topic";
 
-    public EnrollResponseDto enrollProduct(EnrollRequestDto requestDto, Long userId) {
+    public EnrollResponseDto enrollProduct(EnrollRequestDto requestDto, Long uid) {
 
         String clientId = UUID.randomUUID().toString();
         String clientSecret = RandomStringUtils.randomAlphanumeric(20);
@@ -28,7 +28,7 @@ public class OnBoardingService {
         String hashedClientSecret = passwordEncoder.encode(clientSecret);
 
         ProductEnrollEventDto event = ProductEnrollEventDto.builder()
-                .userId(userId)
+                .uid(uid)
                 .productName(requestDto.getProductName())
                 .productDescription(requestDto.getProductDescription())
                 .clientId(clientId)

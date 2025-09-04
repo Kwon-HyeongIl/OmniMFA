@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/onboard")
+@RequestMapping("/onboarding")
 public class OnBoardingController {
 
     private final OnBoardingService onBoardingService;
@@ -28,11 +28,11 @@ public class OnBoardingController {
 
         SecurityUserPrincipal userPrincipal = (SecurityUserPrincipal) userDetails;
 
-        Long userId = Long.valueOf(userPrincipal.getUsername());
+        Long uid = Long.valueOf(userPrincipal.getUsername());
 
-        log.info("인증된 userId: {}", userId);
+        log.info("인증된 uid: {}", uid);
 
-        EnrollResponseDto reponseDto = onBoardingService.enrollProduct(requestDto, userId);
+        EnrollResponseDto reponseDto = onBoardingService.enrollProduct(requestDto, uid);
 
         return ResponseEntity.ok(ApiResponse.success(reponseDto));
     }

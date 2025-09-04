@@ -1,13 +1,13 @@
 package com.khi.securityservice.core.entity.security;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 public class SecurityUserPrincipalEntity {
 
-    private String uid;
+    private Long uid;
     private String password;
     private String role;
 }

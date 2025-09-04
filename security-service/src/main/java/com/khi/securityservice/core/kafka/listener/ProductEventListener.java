@@ -1,10 +1,13 @@
 package com.khi.securityservice.core.kafka.listener;
 
+import com.khi.securityservice.core.entity.domain.ProductEntity;
+import com.khi.securityservice.core.entity.domain.ProductSecretEntity;
 import com.khi.securityservice.core.entity.domain.UserEntity;
 import com.khi.securityservice.core.kafka.dto.ProductEnrollEventDto;
 import com.khi.securityservice.core.repository.ProductRepository;
 import com.khi.securityservice.core.repository.ProductSecretRepository;
 import com.khi.securityservice.core.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -26,24 +29,19 @@ public class ProductEventListener {
 
         log.info("product-enroll-topic 이벤트 수신");
 
-        UserEntity user = userRepository.findByLoginId(eventDto.g)
+        UserEntity user = userRepository.findById(eventDto.getUid())
+                .orElseThrow(() -> new EntityNotFoundException("유저가 존재하지 않음, 요청된 uid: " + eventDto.getUid()));
+
+        ProductEntity product = new ProductEntity();
+        product.setUser(user);
+        product.setProductName(eventDto.getProductName());
+        product.setProductDescription(eventDto.getProductDescription());
+        ProductEntity savedProduct = productRepository.save(product);
+
+        ProductSecretEntity productSecret = new ProductSecretEntity();
+        productSecret.setClientId(eventDto.getClientId());
+        productSecret.setClientSecret(eventDto.getHashedClientSecret());
+        productSecret.setProduct(savedProduct);
+        productSecretRepository.save(productSecret);
     }
 }
-
-UserEntity user = userRepository.findById(event.getUserId())
-        .orElseThrow(() -> new EntityNotFoundException("User not found"));
-
-// 2. ProductEntity 생성 및 저장
-ProductEntity product = new ProductEntity();
-            product.setUser(user);
-            product.setProductName(event.getProductName());
-        product.setProductUrl(event.getProductUrl());
-        product.setProductDescription(event.getProductDescription());
-ProductEntity savedProduct = productRepository.save(product);
-
-// 3. ProductSecretEntity 생성 및 저장
-ProductSecretEntity secret = new ProductSecretEntity();
-            secret.setClientId(event.getClientId());
-        secret.setClientSecret(event.getHashedClientSecret()); // 해싱된 값 저장
-        secret.setProduct(savedProduct);
-            productSecretRepository.save(secret);

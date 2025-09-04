@@ -36,7 +36,7 @@ public class SecurityUserPrincipal implements UserDetails {
     @Override
     public String getUsername() {
 
-        return securityUserPrincipalEntity.getUid();
+        return String.valueOf(securityUserPrincipalEntity.getUid());
     }
 
     @Override

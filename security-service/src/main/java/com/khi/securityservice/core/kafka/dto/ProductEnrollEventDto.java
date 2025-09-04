@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 public class ProductEnrollEventDto {
 
-    private Long userId;
+    private Long uid;
 
     private String productName;
     private String productDescription;

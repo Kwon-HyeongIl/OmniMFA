@@ -98,12 +98,12 @@ public class JwtReissueFilter extends OncePerRequestFilter {
         log.info("새로운 Access, Refresh 토큰 발급 완료");
 
         // Redis에 기존에 존재하는 Refresh 토큰 삭제
-        redisTemplate.delete(uid);
+        redisTemplate.delete(String.valueOf(uid));
 
         log.info("Redis에서 기존 Refresh 토큰 삭제 완료");
 
         // Redis에 Refresh 토큰 저장
-        String redisKey = uid;
+        String redisKey = String.valueOf(uid);
 
         log.info("Redis에 새로운 Refresh 토큰 저장 완료");
 

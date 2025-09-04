@@ -1,4 +1,4 @@
-package com.khi.securityservice.core.filter.url;
+package com.khi.securityservice.common.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
