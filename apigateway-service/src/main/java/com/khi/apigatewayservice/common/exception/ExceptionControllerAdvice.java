@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionControllerAdvice {
 
     @ExceptionHandler(JwtException.class)
-    public ResponseEntity<ApiResponse<?>> handleBusinessException(JwtException exception) {
+    public ResponseEntity<ApiResponse<?>> handleJwtException(JwtException exception) {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.error(exception.getMessage()));
     }

@@ -1,4 +1,4 @@
-package com.khi.onboardingservice.content.kafka;
+package com.khi.onboardingservice.content.dto.kafka;
 
 import lombok.Builder;
 import lombok.Data;

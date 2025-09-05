@@ -1,5 +1,7 @@
 package com.khi.securityservice.core.kafka.listener;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.khi.securityservice.core.entity.domain.ProductEntity;
 import com.khi.securityservice.core.entity.domain.ProductSecretEntity;
 import com.khi.securityservice.core.entity.domain.UserEntity;
@@ -22,12 +24,24 @@ public class ProductEventListener {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final ProductSecretRepository productSecretRepository;
+    private final ObjectMapper objectMapper;
 
     @KafkaListener(topics = "product-enroll-topic", groupId = "security-group")
     @Transactional
-    public void handleEnrollProductEvent(ProductEnrollEventDto eventDto) {
+    public void handleEnrollProductEvent(String jsonPayload) {
 
         log.info("product-enroll-topic 이벤트 수신");
+
+        ProductEnrollEventDto eventDto;
+
+        try {
+
+            eventDto = objectMapper.readValue(jsonPayload, ProductEnrollEventDto.class);
+
+        } catch(JsonProcessingException e) {
+
+            throw new RuntimeException("json 디코딩 실패", e);
+        }
 
         UserEntity user = userRepository.findById(eventDto.getUid())
                 .orElseThrow(() -> new EntityNotFoundException("유저가 존재하지 않음, 요청된 uid: " + eventDto.getUid()));

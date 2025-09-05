@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @Component
-@Order(Ordered.HIGHEST_PRECEDENCE) // 필터의 실행 순서를 가장 높게 설정
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class AllRequestUrlLoggingFilter implements WebFilter {
 
     @Override
