@@ -17,7 +17,7 @@ public class TotpClientEntity {
     private String clientId; // Product의 clientId
     private String clientUId; // 고객 서비스 사용자 uid
 
-    private String totpSecretKey; // 해시된 키
+    private String totpSecretKey;
 
     private boolean isEnabled;
 }

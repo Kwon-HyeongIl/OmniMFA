@@ -10,7 +10,6 @@ import dev.samstevens.totp.qr.ZxingPngQrGenerator;
 import dev.samstevens.totp.secret.DefaultSecretGenerator;
 import dev.samstevens.totp.secret.SecretGenerator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static dev.samstevens.totp.util.Utils.getDataUriForImage;
@@ -19,25 +18,23 @@ import static dev.samstevens.totp.util.Utils.getDataUriForImage;
 @RequiredArgsConstructor
 public class SetupService {
 
-    private final TotpClientRepository repository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final TotpClientRepository totpClientRepository;
 
     public String generateQrCode(String clientId, String clientUid) {
 
         SecretGenerator secretGenerator = new DefaultSecretGenerator();
         String totpSecretKey = secretGenerator.generate();
-        String hashedTotpSecretKey = passwordEncoder.encode(totpSecretKey);
 
         TotpClientEntity client =  new TotpClientEntity();
         client.setClientId(clientId);
         client.setClientUId(clientUid);
-        client.setTotpSecretKey(hashedTotpSecretKey);
+        client.setTotpSecretKey(totpSecretKey);
         client.setEnabled(true);
-        repository.save(client);
+        totpClientRepository.save(client);
 
         QrData data = new QrData.Builder()
                 .label(clientUid)
-                .secret(hashedTotpSecretKey)
+                .secret(totpSecretKey)
                 .issuer("OmniMFA")
                 .algorithm(HashingAlgorithm.SHA1)
                 .digits(6)
@@ -53,7 +50,7 @@ public class SetupService {
 
         } catch (QrGenerationException e) {
 
-            throw new RuntimeException("QR Code generation failed", e);
+            throw new RuntimeException("QR 코드 생성에 실패하였습니다.", e);
         }
     }
 }
