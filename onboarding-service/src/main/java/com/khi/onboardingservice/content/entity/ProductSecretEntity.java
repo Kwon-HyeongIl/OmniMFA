@@ -1,9 +1,7 @@
-package com.khi.securityservice.core.entity.domain;
+package com.khi.onboardingservice.content.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Data
@@ -16,6 +14,7 @@ public class ProductSecretEntity {
     private String clientId;
     private String clientSecret;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
     private ProductEntity product;
 }

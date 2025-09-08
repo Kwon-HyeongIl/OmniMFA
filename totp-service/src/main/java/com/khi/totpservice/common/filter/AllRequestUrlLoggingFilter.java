@@ -1,4 +1,4 @@
-package com.khi.onboardingservice.common.filter;
+package com.khi.totpservice.common.filter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;

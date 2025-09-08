@@ -1,9 +1,7 @@
-package com.khi.securityservice.core.entity.domain;
+package com.khi.onboardingservice.content.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Data
@@ -13,9 +11,11 @@ public class ProductEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    private UserEntity user;
+    private Long uid;
 
     private String productName;
     private String productDescription;
+
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
+    private ProductSecretEntity productSecret;
 }

@@ -19,7 +19,4 @@ public class UserEntity {
 
     private String nickname;
     private String realName;
-
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private ProductEntity product;
 }
