@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class OnBoardingService {
+public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductSecretRepository productSecretRepository;

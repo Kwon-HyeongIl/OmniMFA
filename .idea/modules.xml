@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/OmniMFA.iml" filepath="$PROJECT_DIR$/.idea/OmniMFA.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/onboarding-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/onboarding-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/security-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/security-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/totp-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/totp-service.main.iml" />
     </modules>
   </component>
 </project>
