@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class VerifyRequestDto {
 
-    private String clientUid;
+    private String customerServiceClientUid;
     private String code;
 }

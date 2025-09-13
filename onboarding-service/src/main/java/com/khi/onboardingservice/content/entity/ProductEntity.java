@@ -16,6 +16,5 @@ public class ProductEntity {
     private String productName;
     private String productDescription;
 
-    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
-    private ProductSecretEntity productSecret;
+    private String productClientId;
 }

@@ -35,6 +35,13 @@ dependencies {
 	/* Swagger */
 	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.8.8'
 
+	/* Kafka */
+	implementation 'org.springframework.kafka:spring-kafka'
+
+	/* DB */
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
 	/* Lombok */
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'

@@ -38,7 +38,10 @@ public class JwtValidateFilter implements GlobalFilter {
             Map.entry("/swagger-ui/swagger-ui-standalone-preset.js", Set.of(HttpMethod.GET)),
             Map.entry("/swagger-ui/swagger-initializer.js", Set.of(HttpMethod.GET)),
             Map.entry("/v3/api-docs/swagger-config", Set.of(HttpMethod.GET)),
-            Map.entry("/v3/api-docs", Set.of(HttpMethod.GET))
+            Map.entry("/v3/api-docs", Set.of(HttpMethod.GET)),
+
+            Map.entry("/totp/setup", Set.of(HttpMethod.POST)),
+            Map.entry("/totp/verify", Set.of(HttpMethod.POST))
 
 //            Map.entry("/security/health", Set.of(HttpMethod.GET))
     );
@@ -46,17 +49,17 @@ public class JwtValidateFilter implements GlobalFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
-        log.info("JwtValidateFilter 실행");
-
         String path = exchange.getRequest().getURI().getRawPath();
         HttpMethod method = exchange.getRequest().getMethod();
 
         if (isAllowed(path, method)) {
 
-            log.info("허용된 URL: {} {}", method, path);
+            log.info("JwtValidateFilter - 허용된 URL: {} {}", method, path);
 
             return chain.filter(exchange);
         }
+
+        log.info("JwtValidateFilter 실행");
 
         String fullToken = exchange.getRequest().getHeaders().getFirst("Authorization");
         String accessToken;

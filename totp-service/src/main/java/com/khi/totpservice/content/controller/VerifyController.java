@@ -20,7 +20,7 @@ public class VerifyController {
     @PostMapping("/verify")
     public ResponseEntity<ApiResponse<?>> verifyCode(@RequestBody VerifyRequestDto requestDto) {
 
-        boolean result = verifyService.verifyCode(requestDto.getClientUid(), requestDto.getCode());
+        boolean result = verifyService.verifyCode(requestDto.getCustomerServiceClientUid(), requestDto.getCode());
 
         return ResponseEntity.ok(ApiResponse.success(result));
     }

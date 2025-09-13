@@ -26,8 +26,8 @@ public class SetupService {
         String totpSecretKey = secretGenerator.generate();
 
         TotpClientEntity client =  new TotpClientEntity();
-        client.setClientId(clientId);
-        client.setClientUId(clientUid);
+        client.setProductClientId(clientId);
+        client.setCustomerServiceClientUid(clientUid);
         client.setTotpSecretKey(totpSecretKey);
         client.setEnabled(true);
         totpClientRepository.save(client);

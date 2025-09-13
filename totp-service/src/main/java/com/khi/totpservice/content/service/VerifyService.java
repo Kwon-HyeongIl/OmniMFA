@@ -19,7 +19,7 @@ public class VerifyService {
 
     public boolean verifyCode(String clientUid, String code) {
 
-        TotpClientEntity totpClient = totpClientRepository.findByClientUid(clientUid)
+        TotpClientEntity totpClient = totpClientRepository.findByCustomerServiceClientUid(clientUid)
                 .orElseThrow(() -> new RuntimeException("TOTP 클라이언트가 존재하지 않습니다."));
 
         String totpSecretKey = totpClient.getTotpSecretKey();

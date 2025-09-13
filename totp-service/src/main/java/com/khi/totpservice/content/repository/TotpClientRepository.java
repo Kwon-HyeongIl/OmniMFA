@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface TotpClientRepository extends JpaRepository<TotpClientEntity, Long> {
 
-    Optional<TotpClientEntity> findByClientUid(String clientUId);
+    Optional<TotpClientEntity> findByCustomerServiceClientUid(String uid);
 }
