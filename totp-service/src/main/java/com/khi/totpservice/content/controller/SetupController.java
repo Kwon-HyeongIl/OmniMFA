@@ -18,7 +18,7 @@ public class SetupController {
     @PostMapping("/setup")
     public ResponseEntity<ApiResponse<?>> setupTotp(@RequestHeader("omnimfa-client-id") String clientId, @RequestBody SetupRequestDto requestDto) {
 
-        String qrCodeDataUri = setupService.generateQrCode(clientId, requestDto.getClientUid());
+        String qrCodeDataUri = setupService.generateQrCode(clientId, requestDto.getCustomerServiceClientUid());
 
         SetupResponseDto responseDto = SetupResponseDto.builder()
                 .qrCodeDataUri(qrCodeDataUri)

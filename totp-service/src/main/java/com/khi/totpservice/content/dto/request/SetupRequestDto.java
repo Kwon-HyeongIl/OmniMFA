@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class SetupRequestDto {
 
-    private String clientUid;
+    private String customerServiceClientUid;
 }

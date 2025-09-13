@@ -20,20 +20,20 @@ public class SetupService {
 
     private final TotpClientRepository totpClientRepository;
 
-    public String generateQrCode(String clientId, String clientUid) {
+    public String generateQrCode(String clientId, String customerServiceClientUid) {
 
         SecretGenerator secretGenerator = new DefaultSecretGenerator();
         String totpSecretKey = secretGenerator.generate();
 
         TotpClientEntity client =  new TotpClientEntity();
         client.setProductClientId(clientId);
-        client.setCustomerServiceClientUid(clientUid);
+        client.setCustomerServiceClientUid(customerServiceClientUid);
         client.setTotpSecretKey(totpSecretKey);
         client.setEnabled(true);
         totpClientRepository.save(client);
 
         QrData data = new QrData.Builder()
-                .label(clientUid)
+                .label(customerServiceClientUid)
                 .secret(totpSecretKey)
                 .issuer("OmniMFA")
                 .algorithm(HashingAlgorithm.SHA1)
