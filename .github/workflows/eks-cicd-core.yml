@@ -34,7 +34,7 @@ jobs:
   deploy-apigateway:
     needs: detect-changes
     if: needs.detect-changes.outputs.apigateway == 'true' && !contains(github.event.head_commit.message, '[skip cicd]')
-    uses: ./.github/workflows/reusable-deploy.yml
+    uses: ./.github/workflows/eks-cicd-deploy.yml
     with:
       service_name: apigateway-service
     secrets:
@@ -44,7 +44,7 @@ jobs:
   deploy-security:
     needs: detect-changes
     if: needs.detect-changes.outputs.security == 'true' && !contains(github.event.head_commit.message, '[skip cicd]')
-    uses: ./.github/workflows/reusable-deploy.yml
+    uses: ./.github/workflows/eks-cicd-deploy.yml
     with:
       service_name: security-service
     secrets:
@@ -54,7 +54,7 @@ jobs:
   deploy-onboarding:
     needs: detect-changes
     if: needs.detect-changes.outputs.onboarding == 'true' && !contains(github.event.head_commit.message, '[skip cicd]')
-    uses: ./.github/workflows/reusable-deploy.yml
+    uses: ./.github/workflows/eks-cicd-deploy.yml
     with:
       service_name: onboarding-service
     secrets:
@@ -64,7 +64,7 @@ jobs:
   deploy-totp:
     needs: detect-changes
     if: needs.detect-changes.outputs.totp == 'true' && !contains(github.event.head_commit.message, '[skip cicd]')
-    uses: ./.github/workflows/reusable-deploy.yml
+    uses: ./.github/workflows/eks-cicd-deploy.yml
     with:
       service_name: totp-service
     secrets:
