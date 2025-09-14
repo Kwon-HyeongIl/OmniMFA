@@ -1,0 +1,31 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: omnimfa-issuer
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: llioopv@gmail.com
+    privateKeySecretRef:
+      name: omnimfa-issuer
+    solvers:
+      - http01:
+          ingress:
+            ingressClassName: nginx
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: omnimfa-com-tls
+  namespace: omnimfa
+spec:
+  secretName: omnimfa-com-tls
+  duration: 2160h
+  renewBefore: 360h
+  issuerRef:
+    name: omnimfa-issuer # ClusterIssuer-name
+    kind: ClusterIssuer
+  commonName: omnimfa.cloud
+  dnsNames:
+    - server.omnimfa.cloud

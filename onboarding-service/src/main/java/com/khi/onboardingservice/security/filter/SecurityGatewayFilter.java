@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,10 +16,26 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @Component
 public class SecurityGatewayFilter extends OncePerRequestFilter {
+
+    private static final Map<String, Set<HttpMethod>> FILTERED_PATHS = Map.ofEntries(
+            Map.entry("/onboarding/temp1", Set.of(HttpMethod.POST)),
+            Map.entry("/onboarding/temp2", Set.of(HttpMethod.POST))
+    );
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        HttpMethod method = HttpMethod.valueOf(request.getMethod());
+
+        return !FILTERED_PATHS.getOrDefault(path, Collections.emptySet()).contains(method);
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onboarding
+  namespace: omnimfa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: onboarding
+  template:
+    metadata:
+      labels:
+        app: onboarding
+    spec:
+      containers:
+        - name: onboarding-container
+          image: 246233007938.dkr.ecr.ap-northeast-2.amazonaws.com/apigateway-service:latest
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: "1"
+              memory: "500Mi"
+            requests:
+              cpu: "0.5"
+              memory: "250Mi"
+
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://khi-mysql-service:3306/main?useSSL=false&allowPublicKeyRetrieval=true"
+
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "root"
+
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omnimfa-secret
+                  key: MYSQL-PASSWORD
+
+            - name: JWT-SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: omnimfa-secret
+                  key: JWT-SECRET
+
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: onboarding-service
+  namespace: omnimfa
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: onboarding

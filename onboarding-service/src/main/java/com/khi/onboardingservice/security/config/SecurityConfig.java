@@ -50,7 +50,6 @@ public class SecurityConfig {
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-
                         /* Swagger */
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/index.html").permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/swagger-ui.css").permitAll()
@@ -60,6 +59,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/swagger-initializer.js").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v3/api-docs/swagger-config").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v3/api-docs").permitAll()
+
+                        /* Health */
+                        .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
 
                         .requestMatchers("/security/admin").hasRole("ADMIN")
 

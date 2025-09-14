@@ -1,0 +1,109 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  application:
+    name: apigateway-service
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowedMethods: '*'
+                allowedHeaders: '*'
+                allowCredentials: true
+
+          routes:
+            # Swagger
+            - id: security-service-swagger
+              predicates:
+                - Path=/api/v1/security/v3/api-docs/**, /api/v1/security/swagger-ui/**
+              filters:
+                - StripPrefix=3
+              uri: http://security-service
+              order: 0
+
+            - id: onboarding-service-swagger
+              predicates:
+                - Path=/api/v1/onboarding/v3/api-docs/**, /api/v1/onboarding/swagger-ui/**
+              filters:
+                - StripPrefix=3
+              uri: http://onboarding-service
+              order: 0
+
+            - id: totp-service-swagger
+              predicates:
+                - Path=/api/v1/totp/v3/api-docs/**, /api/v1/totp/swagger-ui/**
+              filters:
+                - StripPrefix=3
+              uri: http://totp-service
+              order: 0
+
+            # Service
+            - id: security-service
+              predicates:
+                - Path=/api/v1/security/**
+              filters:
+                - StripPrefix=2
+              uri: http://security-service
+              order: 1
+
+            - id: onboarding-service
+              predicates:
+                - Path=/api/v1/onboarding/**
+              filters:
+                - StripPrefix=2
+              uri: http://onboarding-service
+              order: 1
+
+            - id: totp-service
+              predicates:
+                - Path=/api/v1/totp/**
+              filters:
+                - StripPrefix=2
+              uri: http://totp-service
+              order: 1
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+      show_sql: true
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+eureka:
+  client:
+    enabled: false
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: Security
+        url: /api/v1/security/v3/api-docs
+      - name: Onboarding
+        url: /api/v1/onboarding/v3/api-docs
+      - name: Totp
+        url: /api/v1/totp/v3/api-docs
+    use-root-path: true
+
+jwt:
+  secret: ${JWT-SECRET}
