@@ -1,0 +1,72 @@
+name: eks-cicd-core
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      apigateway: ${{ steps.filter.outputs.apigateway }}
+      security: ${{ steps.filter.outputs.security }}
+      onboarding: ${{ steps.filter.outputs.onboarding }}
+      totp: ${{ steps.filter.outputs.totp }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Detect changed files
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            apigateway:
+              - 'apigateway-service/**'
+            security:
+              - 'security-service/**'
+            onboarding:
+              - 'onboarding-service/**'
+            totp:
+              - 'totp-service/**'
+
+  deploy-apigateway:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.apigateway == 'true' && !contains(github.event.head_commit.message, '[skip cicd]')
+    uses: ./.github/workflows/reusable-deploy.yml
+    with:
+      service_name: apigateway-service
+    secrets:
+      AWS_KEY: ${{ secrets.AWS_KEY }}
+      AWS_SECRET: ${{ secrets.AWS_SECRET }}
+
+  deploy-security:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.security == 'true' && !contains(github.event.head_commit.message, '[skip cicd]')
+    uses: ./.github/workflows/reusable-deploy.yml
+    with:
+      service_name: security-service
+    secrets:
+      AWS_KEY: ${{ secrets.AWS_KEY }}
+      AWS_SECRET: ${{ secrets.AWS_SECRET }}
+
+  deploy-onboarding:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.onboarding == 'true' && !contains(github.event.head_commit.message, '[skip cicd]')
+    uses: ./.github/workflows/reusable-deploy.yml
+    with:
+      service_name: onboarding-service
+    secrets:
+      AWS_KEY: ${{ secrets.AWS_KEY }}
+      AWS_SECRET: ${{ secrets.AWS_SECRET }}
+
+  deploy-totp:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.totp == 'true' && !contains(github.event.head_commit.message, '[skip cicd]')
+    uses: ./.github/workflows/reusable-deploy.yml
+    with:
+      service_name: totp-service
+    secrets:
+      AWS_KEY: ${{ secrets.AWS_KEY }}
+      AWS_SECRET: ${{ secrets.AWS_SECRET }}
