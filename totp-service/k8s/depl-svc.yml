@@ -27,13 +27,13 @@ spec:
               memory: "250Mi"
 
           env:
-            - name: SPRING_DATASOURCE_URL
+            - name: DATASOURCE-URL
               value: "jdbc:mysql://khi-mysql-service:3306/main?useSSL=false&allowPublicKeyRetrieval=true"
 
-            - name: SPRING_DATASOURCE_USERNAME
+            - name: DATASOURCE-USERNAME
               value: "root"
 
-            - name: SPRING_DATASOURCE_PASSWORD
+            - name: DATASOURCE-PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: omnimfa-secret
