@@ -24,7 +24,7 @@ spring:
                 - Path=/api/v1/security/v3/api-docs/**, /api/v1/security/swagger-ui/**
               filters:
                 - StripPrefix=3
-              uri: http://security-service
+              uri: http://security-k8ssvc
               order: 0
 
             - id: onboarding-service-swagger
@@ -32,7 +32,7 @@ spring:
                 - Path=/api/v1/onboarding/v3/api-docs/**, /api/v1/onboarding/swagger-ui/**
               filters:
                 - StripPrefix=3
-              uri: http://onboarding-service
+              uri: http://onboarding-k8ssvc
               order: 0
 
             - id: totp-service-swagger
@@ -40,7 +40,7 @@ spring:
                 - Path=/api/v1/totp/v3/api-docs/**, /api/v1/totp/swagger-ui/**
               filters:
                 - StripPrefix=3
-              uri: http://totp-service
+              uri: http://totp-k8ssvc
               order: 0
 
             # Service
@@ -49,7 +49,7 @@ spring:
                 - Path=/api/v1/security/**
               filters:
                 - StripPrefix=2
-              uri: http://security-service
+              uri: http://security-k8ssvc
               order: 1
 
             - id: onboarding-service
@@ -57,7 +57,7 @@ spring:
                 - Path=/api/v1/onboarding/**
               filters:
                 - StripPrefix=2
-              uri: http://onboarding-service
+              uri: http://onboarding-k8ssvc
               order: 1
 
             - id: totp-service
@@ -65,7 +65,7 @@ spring:
                 - Path=/api/v1/totp/**
               filters:
                 - StripPrefix=2
-              uri: http://totp-service
+              uri: http://totp-k8ssvc
               order: 1
 
   datasource:

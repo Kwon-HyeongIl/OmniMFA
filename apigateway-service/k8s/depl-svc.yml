@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: apigateway
+  name: apigateway-service-depl
   namespace: omnimfa
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: apigateway
+      app: apigateway-service-depl
   template:
     metadata:
       labels:
-        app: apigateway
+        app: apigateway-service-depl
     spec:
       containers:
         - name: apigateway-container
@@ -54,7 +54,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: apigateway-service
+  name: apigateway-k8ssvc
   namespace: omnimfa
 spec:
   type: ClusterIP
@@ -62,4 +62,4 @@ spec:
     - port: 80
       targetPort: 8080
   selector:
-    app: apigateway
+    app: apigateway-service-depl

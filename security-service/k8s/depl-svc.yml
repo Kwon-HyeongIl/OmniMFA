@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: security
+  name: security-service-depl
   namespace: omnimfa
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: security
+      app: security-service-depl
   template:
     metadata:
       labels:
-        app: security
+        app: security-service-depl
     spec:
       containers:
         - name: security-container
@@ -54,7 +54,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: security-service
+  name: security-k8ssvc
   namespace: omnimfa
 spec:
   type: ClusterIP
@@ -62,4 +62,4 @@ spec:
     - port: 80
       targetPort: 8080
   selector:
-    app: security
+    app: security-service-depl
