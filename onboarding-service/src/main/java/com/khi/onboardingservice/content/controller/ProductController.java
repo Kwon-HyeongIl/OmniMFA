@@ -36,4 +36,9 @@ public class ProductController {
 
         return ResponseEntity.ok(ApiResponse.success(reponseDto));
     }
+
+    @PostMapping("/test")
+    public String test() {
+        return "ok";
+    }
 }

@@ -43,7 +43,9 @@ public class JwtValidateFilter implements GlobalFilter {
             Map.entry("/totp/setup", Set.of(HttpMethod.POST)),
             Map.entry("/totp/verify", Set.of(HttpMethod.POST)),
 
-            Map.entry("/actuator/health", Set.of(HttpMethod.GET))
+            Map.entry("/actuator/health", Set.of(HttpMethod.GET)),
+
+            Map.entry("/onboarding/test", Set.of(HttpMethod.POST))
     );
 
     @Override
