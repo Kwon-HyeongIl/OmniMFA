@@ -39,6 +39,8 @@ public class ProductController {
 
     @PostMapping("/test")
     public String test() {
+
+        log.info("/test 요청됨");
         return "ok";
     }
 }
