@@ -1,26 +1,31 @@
 package com.khi.onboardingservice.common.filter;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
+
 @Slf4j
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class AllRequestUrlLoggingFilter implements WebFilter {
+public class AllRequestUrlLoggingFilter extends OncePerRequestFilter {
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        var request = exchange.getRequest();
+        log.info("[REQUEST] {} {}", request.getMethod(), request.getRequestURI());
 
-        log.info("[REQUEST] {} {}", request.getMethod(), request.getURI());
-
-        return chain.filter(exchange);
+        filterChain.doFilter(request, response);
     }
 }
