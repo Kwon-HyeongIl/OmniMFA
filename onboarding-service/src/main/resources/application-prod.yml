@@ -23,21 +23,10 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
   kafka:
-    bootstrap-servers: ${KAFKA-BOOTSTRAP-SERVERS}
     producer:
+      bootstrap-servers: kafka-k8ssvc:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-    properties:
-      security:
-        protocol: SASL_SSL
-      sasl:
-        mechanism: AWS_MSK_IAM
-        jaas:
-          config: software.amazon.msk.auth.iam.IAMLoginModule required;
-        client:
-          callback:
-            handler:
-              class: software.amazon.msk.auth.iam.IAMClientCallbackHandler
 
 management:
   endpoints:

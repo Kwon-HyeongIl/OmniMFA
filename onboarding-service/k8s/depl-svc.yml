@@ -39,9 +39,6 @@ spec:
                   name: omnimfa-secret
                   key: MYSQL-PASSWORD
 
-            - name: KAFKA-BOOTSTRAP-SERVERS
-              value: "boot-ktw21jay.c2.kafka-serverless.ap-northeast-2.amazonaws.com:9098"
-
             - name: JWT-SECRET
               valueFrom:
                 secretKeyRef:

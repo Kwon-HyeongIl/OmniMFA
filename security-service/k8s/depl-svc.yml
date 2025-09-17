@@ -39,9 +39,6 @@ spec:
                   name: omnimfa-secret
                   key: MYSQL-PASSWORD
 
-            - name: VALKEY-HOST
-              value: "clustercfg.omnimfa-valkey-cluster.osogdq.apn2.cache.amazonaws.com"
-
             - name: JWT-SECRET
               valueFrom:
                 secretKeyRef:
