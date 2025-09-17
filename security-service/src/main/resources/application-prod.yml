@@ -8,7 +8,7 @@ spring:
 
   data:
     redis:
-      host: redis-service
+      host: ${VALKEY-HOST}
       port: 6379
 
   datasource:

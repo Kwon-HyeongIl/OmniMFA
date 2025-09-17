@@ -9,10 +9,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - "server.omnimfa.cloud"
+        - "www.omnimfa.cloud"
       secretName: omnimfa-com-tls # Certificate-secretName
   rules:
-    - host: server.omnimfa.cloud
+    - host: www.omnimfa.cloud
       http:
         paths:
           - path: /

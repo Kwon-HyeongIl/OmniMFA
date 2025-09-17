@@ -26,6 +26,6 @@ spec:
   issuerRef:
     name: omnimfa-issuer # ClusterIssuer-name
     kind: ClusterIssuer
-  commonName: omnimfa.cloud
+  commonName: www.omnimfa.cloud
   dnsNames:
-    - server.omnimfa.cloud
+    - www.omnimfa.cloud
