@@ -65,8 +65,6 @@ public class SecurityConfig {
 
                         .requestMatchers("/security/admin").hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.POST, "/onboarding/test").permitAll()
-
                         .anyRequest().authenticated());
 
         // 무상태 세션 설정
