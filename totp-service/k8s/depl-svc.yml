@@ -28,7 +28,7 @@ spec:
 
           env:
             - name: DATASOURCE-URL
-              value: "jdbc:mysql://omnimfa-database.cx806ocaco0v.ap-northeast-2.rds.amazonaws.com:3306/main?useSSL=false"
+              value: "jdbc:mysql://omnimfa-database.cx806ocaco0v.ap-northeast-2.rds.amazonaws.com:3306/totp?useSSL=false"
 
             - name: DATASOURCE-USERNAME
               value: "root"
