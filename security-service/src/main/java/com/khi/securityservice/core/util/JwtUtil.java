@@ -1,8 +1,10 @@
 package com.khi.securityservice.core.util;
 
 import com.khi.securityservice.core.enumeration.JwtTokenType;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -35,7 +37,12 @@ public class JwtUtil {
 
     public Boolean isExpired(String token) {
 
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        try {
+            return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+
+        } catch (ExpiredJwtException e) {
+            return true;
+        }
     }
 
     public String createJwt(JwtTokenType tokenType, String uid, String role, Long expiredMs) {

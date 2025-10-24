@@ -46,10 +46,10 @@ public class ProductService {
                 .build();
 
         try {
-
             String jsonPayload = objectMapper.writeValueAsString(enrollEvent);
 
             kafkaTemplate.send(TOPIC_NAME, jsonPayload);
+
         } catch(JsonProcessingException e) {
 
             throw new RuntimeException("json 인코딩 실패", e);

@@ -25,8 +25,7 @@ import java.util.Set;
 public class SecurityGatewayFilter extends OncePerRequestFilter {
 
     private static final Map<String, Set<HttpMethod>> FILTERED_PATHS = Map.ofEntries(
-            Map.entry("/onboarding/enroll", Set.of(HttpMethod.POST)),
-            Map.entry("/onboarding/temp", Set.of(HttpMethod.POST))
+            Map.entry("/onboarding/enroll", Set.of(HttpMethod.POST))
     );
 
     @Override

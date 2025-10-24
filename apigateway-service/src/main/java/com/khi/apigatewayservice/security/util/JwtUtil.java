@@ -1,6 +1,7 @@
 package com.khi.apigatewayservice.security.util;
 
 import com.khi.apigatewayservice.security.enumeration.JwtTokenType;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -35,6 +36,11 @@ public class JwtUtil {
 
     public Boolean isExpired(String token) {
 
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        try {
+            return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+
+        } catch (ExpiredJwtException e) {
+            return true;
+        }
     }
 }
