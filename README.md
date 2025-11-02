@@ -36,9 +36,3 @@ OmniMFA를 이용하는 서비스의 개발팀은 짧은 시간에 연동을 완
 - DNS: **Amazon Route53**
 - 헬스 체크: **Spring Acuator**
 - CI/CD: **Github Actions**
-
-<br>
-
-## ⚙️ 기술적인 내용
-
-
