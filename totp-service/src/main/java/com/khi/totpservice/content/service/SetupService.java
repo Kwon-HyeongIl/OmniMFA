@@ -34,7 +34,7 @@ public class SetupService {
 
         QrData data = new QrData.Builder()
                 .label(productId + ":" + productClientUid)
-                .secret(totpSecretKey)
+                .secret(totpSecretKey) // totpSecretKey로 qr을 구분
                 .issuer("OmniMFA")
                 .algorithm(HashingAlgorithm.SHA1)
                 .digits(6)
