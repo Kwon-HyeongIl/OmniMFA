@@ -32,9 +32,6 @@ dependencies {
 	/* Secret */
 	implementation 'org.apache.commons:commons-lang3:3.12.0'
 
-	/* Kafka */
-	implementation 'org.springframework.kafka:spring-kafka'
-
 	/* Health */
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
