@@ -1,7 +1,6 @@
 package com.khi.apigatewayservice.security.filter;
 
-import com.khi.apigatewayservice.security.entity.ProductSecretEntity;
-import com.khi.apigatewayservice.security.repository.ProductSecretRepository;
+import com.khi.apigatewayservice.security.repository.ProductAuthRedisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -21,14 +20,13 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ClientValidateFilter implements GlobalFilter {
 
-    private final ProductSecretRepository productSecretRepository;
+    private final ProductAuthRedisRepository productAuthRedisRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private static final Map<String, Set<HttpMethod>> VALIDATE_PATHS = Map.ofEntries(
 
             Map.entry("/totp/setup", Set.of(HttpMethod.POST)),
-            Map.entry("/totp/verify", Set.of(HttpMethod.POST))
-    );
+            Map.entry("/totp/verify", Set.of(HttpMethod.POST)));
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -53,19 +51,17 @@ public class ClientValidateFilter implements GlobalFilter {
             throw new RuntimeException("클라이언트 키가 비었습니다.");
         }
 
-        ProductSecretEntity productSecret = productSecretRepository.findByProductClientId(clientId)
-                .orElseThrow(() -> new RuntimeException("일치하는 클라이언트 ID가 존재하지 않습니다."));
-
-        boolean result = bCryptPasswordEncoder.matches(clientSecret, productSecret.getProductHashedClientSecret());
-
-        if (result) {
-
-            log.info("클라이언트 검증 성공");
-            return chain.filter(exchange);
-        } else {
-
-            throw new RuntimeException("클라이언트 키가 일치하지 않습니다.");
-        }
+        return productAuthRedisRepository.getHashedSecretByClientId(clientId)
+                .switchIfEmpty(Mono.error(new RuntimeException("일치하는 클라이언트 ID가 존재하지 않습니다.")))
+                .flatMap(hashedSecret -> {
+                    boolean result = bCryptPasswordEncoder.matches(clientSecret, hashedSecret);
+                    if (result) {
+                        log.info("클라이언트 검증 성공");
+                        return chain.filter(exchange);
+                    } else {
+                        return Mono.error(new RuntimeException("클라이언트 키가 일치하지 않습니다."));
+                    }
+                });
     }
 
     private boolean isValidationRequired(String path, HttpMethod method) {
