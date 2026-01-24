@@ -22,21 +22,22 @@ public class ProductService {
 
     public EnrollResponseDto enrollProduct(EnrollRequestDto requestDto, Long uid) {
 
-        String productClientId = UUID.randomUUID().toString();
-        String productClientSecret = RandomStringUtils.randomAlphanumeric(20);
-        String hashedProductClientSecret = bCryptPasswordEncoder.encode(productClientSecret);
+        String productId = UUID.randomUUID().toString();
+        String productSecret = RandomStringUtils.randomAlphanumeric(20);
+        String hashedProductSecret = bCryptPasswordEncoder.encode(productSecret);
 
         // DB에 Product 저장
         ProductEntity product = new ProductEntity();
+        product.setId(productId);
+        product.setHashedProductSecret(hashedProductSecret);
         product.setUid(uid);
         product.setProductName(requestDto.getProductName());
         product.setProductDescription(requestDto.getProductDescription());
-        product.setProductClientId(productClientId);
         productRepository.save(product);
 
-        // Redis에 인증 정보 저장
-        productAuthRedisRepository.saveProductAuth(productClientId, hashedProductClientSecret);
+        // Redis에 제품 인증 정보 저장
+        productAuthRedisRepository.saveProductAuth(productId, hashedProductSecret);
 
-        return new EnrollResponseDto(productClientId, productClientSecret);
+        return new EnrollResponseDto(productId, productSecret);
     }
 }

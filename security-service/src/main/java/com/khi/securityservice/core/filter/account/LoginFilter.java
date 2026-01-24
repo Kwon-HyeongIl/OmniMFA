@@ -17,13 +17,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
 
     /*
-     * new AntPathRequestMatcher("/security/login", "POST") 조건을 만족시킬 때만 attemptAuthentication 호출 (폼 로그인일 경우)
+     * new AntPathRequestMatcher("/security/login", "POST") 조건을 만족시킬 때만
+     * attemptAuthentication 호출 (폼 로그인일 경우)
      * 이외의 경우에는 attemptAuthentication 스킵
      *
      * attempAuthentication 메서드의 authenticate가 성공적으로 인증되면 현재 필터 이후의 필터는 실행되지 않음
      */
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+            throws AuthenticationException {
 
         log.info("LoginFilter 실행");
 

@@ -7,6 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class EnrollResponseDto {
 
-    private String clientId;
-    private String clientSecret; // 해시되지 않은 원본 키
+    private String productId;
+    private String productSecret; // 해시되지 않은 원본 키
 }
