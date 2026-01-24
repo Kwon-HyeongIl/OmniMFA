@@ -5,10 +5,7 @@ import com.khi.totpservice.content.dto.request.VerifyRequestDto;
 import com.khi.totpservice.content.service.VerifyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,9 +15,10 @@ public class VerifyController {
     private final VerifyService verifyService;
 
     @PostMapping("/verify")
-    public ResponseEntity<ApiResponse<?>> verifyCode(@RequestBody VerifyRequestDto requestDto) {
+    public ResponseEntity<ApiResponse<?>> verifyCode(@RequestHeader("product-id") String productId,
+            @RequestBody VerifyRequestDto requestDto) {
 
-        boolean result = verifyService.verifyCode(requestDto.getCustomerServiceClientUid(), requestDto.getCode());
+        boolean result = verifyService.verifyCode(productId, requestDto.getProductClientUid(), requestDto.getCode());
 
         return ResponseEntity.ok(ApiResponse.success(result));
     }

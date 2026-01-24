@@ -14,8 +14,8 @@ public class TotpClientEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String productClientId; // Product의 clientId
-    private String customerServiceClientUid; // 고객 서비스 사용자 uid
+    private String productId;
+    private String productClientUid;
 
     private String totpSecretKey;
 

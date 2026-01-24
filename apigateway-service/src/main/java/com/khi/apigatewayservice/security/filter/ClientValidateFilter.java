@@ -43,23 +43,30 @@ public class ClientValidateFilter implements GlobalFilter {
 
         log.info("ClientValidateFilter 실행");
 
-        String clientId = exchange.getRequest().getHeaders().getFirst("OmniMFA-Client-Id");
-        String clientSecret = exchange.getRequest().getHeaders().getFirst("OmniMFA-Client-Secret");
+        String productIdHeader = exchange.getRequest().getHeaders().getFirst("product-id");
+        String productSecret = exchange.getRequest().getHeaders().getFirst("product-secret");
 
-        if (clientId == null || clientSecret == null) {
+        if (productIdHeader == null || productSecret == null) {
 
-            throw new RuntimeException("클라이언트 키가 비었습니다.");
+            throw new RuntimeException("Product 인증 정보가 비었습니다.");
         }
 
-        return productAuthRedisRepository.getHashedSecretByClientId(clientId)
-                .switchIfEmpty(Mono.error(new RuntimeException("일치하는 클라이언트 ID가 존재하지 않습니다.")))
+        Long productId;
+        try {
+            productId = Long.parseLong(productIdHeader);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Product ID 형식이 올바르지 않습니다.");
+        }
+
+        return productAuthRedisRepository.getHashedSecretByProductId(productId)
+                .switchIfEmpty(Mono.error(new RuntimeException("일치하는 Product ID가 존재하지 않습니다.")))
                 .flatMap(hashedSecret -> {
-                    boolean result = bCryptPasswordEncoder.matches(clientSecret, hashedSecret);
+                    boolean result = bCryptPasswordEncoder.matches(productSecret, hashedSecret);
                     if (result) {
-                        log.info("클라이언트 검증 성공");
+                        log.info("Product 인증 성공");
                         return chain.filter(exchange);
                     } else {
-                        return Mono.error(new RuntimeException("클라이언트 키가 일치하지 않습니다."));
+                        return Mono.error(new RuntimeException("Product Secret이 일치하지 않습니다."));
                     }
                 });
     }

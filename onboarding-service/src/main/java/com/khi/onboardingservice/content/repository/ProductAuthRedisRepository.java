@@ -12,8 +12,8 @@ public class ProductAuthRedisRepository {
 
     private static final String KEY_PREFIX = "product:auth:";
 
-    public void saveProductAuth(String productClientId, String hashedClientSecret) {
-        String key = KEY_PREFIX + productClientId;
-        redisTemplate.opsForValue().set(key, hashedClientSecret);
+    public void saveProductAuth(String productId, String hashedProductSecret) {
+        String key = KEY_PREFIX + productId;
+        redisTemplate.opsForValue().set(key, hashedProductSecret);
     }
 }

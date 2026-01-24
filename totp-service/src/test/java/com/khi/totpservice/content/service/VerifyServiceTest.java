@@ -19,14 +19,16 @@ class VerifyServiceTest {
     @DisplayName("올바른 코드 검증 통과 여부")
     void verifyCode_success() throws Exception {
 
-        String clientUid = "0";
+        String productId = "550e8400-e29b-41d4-a716-446655440000";
+        String productClientUid = "user123";
         String secret = "JBSWY3DPEHPK3PXP";
 
         TotpClientRepository repo = mock(TotpClientRepository.class);
         TotpClientEntity e = new TotpClientEntity();
-        e.setCustomerServiceClientUid(clientUid);
+        e.setProductId(productId);
+        e.setProductClientUid(productClientUid);
         e.setTotpSecretKey(secret);
-        when(repo.findByCustomerServiceClientUid(clientUid)).thenReturn(Optional.of(e));
+        when(repo.findByProductIdAndProductClientUid(productId, productClientUid)).thenReturn(Optional.of(e));
 
         VerifyService service = new VerifyService(repo);
 
@@ -34,7 +36,7 @@ class VerifyServiceTest {
         int timeIndex = (int) (timeProvider.getTime() / 30);
         String validCode = new DefaultCodeGenerator().generate(secret, timeIndex);
 
-        boolean result = service.verifyCode(clientUid, validCode);
+        boolean result = service.verifyCode(productId, productClientUid, validCode);
 
         assertThat(result).isTrue();
     }
@@ -43,18 +45,20 @@ class VerifyServiceTest {
     @DisplayName("잘못된 코드 검증 실패 여부")
     void verifyCode_fail() {
 
-        String clientUid = "0";
+        String productId = "550e8400-e29b-41d4-a716-446655440000";
+        String productClientUid = "user123";
         String secret = "JBSWY3DPEHPK3PXP";
 
         TotpClientRepository repo = mock(TotpClientRepository.class);
         TotpClientEntity e = new TotpClientEntity();
-        e.setCustomerServiceClientUid(clientUid);
+        e.setProductId(productId);
+        e.setProductClientUid(productClientUid);
         e.setTotpSecretKey(secret);
-        when(repo.findByCustomerServiceClientUid(clientUid)).thenReturn(Optional.of(e));
+        when(repo.findByProductIdAndProductClientUid(productId, productClientUid)).thenReturn(Optional.of(e));
 
         VerifyService service = new VerifyService(repo);
 
-        boolean result = service.verifyCode(clientUid, "000000");
+        boolean result = service.verifyCode(productId, productClientUid, "000000");
 
         assertThat(result).isFalse();
     }

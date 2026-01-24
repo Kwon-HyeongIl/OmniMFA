@@ -1,6 +1,7 @@
 package com.khi.onboardingservice.content.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Data;
 
 @Entity
@@ -8,13 +9,12 @@ import lombok.Data;
 public class ProductEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
+
+    private String hashedProductSecret;
 
     private Long uid;
 
     private String productName;
     private String productDescription;
-
-    private String productClientId;
 }

@@ -13,8 +13,8 @@ public class ProductAuthRedisRepository {
 
     private static final String KEY_PREFIX = "product:auth:";
 
-    public Mono<String> getHashedSecretByClientId(String productClientId) {
-        String key = KEY_PREFIX + productClientId;
+    public Mono<String> getHashedSecretByProductId(Long productId) {
+        String key = KEY_PREFIX + productId;
         return reactiveRedisTemplate.opsForValue().get(key);
     }
 }
