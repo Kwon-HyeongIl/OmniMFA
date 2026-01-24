@@ -68,22 +68,6 @@ spring:
               uri: http://totp-k8ssvc
               order: 1
 
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${DATASOURCE-URL}
-    username: ${DATASOURCE-USERNAME}
-    password: ${DATASOURCE-PASSWORD}
-
-  jpa:
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-    generate-ddl: true
-    hibernate:
-      ddl-auto: update
-      show_sql: true
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-
 management:
   endpoints:
     web:
