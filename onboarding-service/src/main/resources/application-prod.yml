@@ -22,12 +22,6 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
-  kafka:
-    producer:
-      bootstrap-servers: kafka-k8ssvc:9092
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-
 management:
   endpoints:
     web:

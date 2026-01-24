@@ -41,8 +41,10 @@ dependencies {
 
     /* DB */
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     runtimeOnly 'com.mysql:mysql-connector-j'
+
+    /* Cache */
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     /* Lombok */
     compileOnly 'org.projectlombok:lombok'

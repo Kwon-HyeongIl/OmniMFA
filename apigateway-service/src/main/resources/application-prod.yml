@@ -84,14 +84,6 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
-  kafka:
-    consumer:
-      bootstrap-servers: kafka-k8ssvc:9092
-      group-id: product-group
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      auto-offset-reset: earliest
-
 management:
   endpoints:
     web:
