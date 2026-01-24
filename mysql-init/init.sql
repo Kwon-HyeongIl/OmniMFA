@@ -1,0 +1,4 @@
+-- 각 서비스별 독립 데이터베이스 생성
+CREATE DATABASE IF NOT EXISTS security;
+CREATE DATABASE IF NOT EXISTS onboarding;
+CREATE DATABASE IF NOT EXISTS totp;
