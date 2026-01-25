@@ -14,13 +14,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
+import com.khi.securityservice.security.repository.RedisRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,18 +27,20 @@ public class JwtReissueFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisRepository refreshTokenRedisRepository;
 
     private final ObjectMapper objectMapper;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 
-        return !(request.getRequestURI().equals("/security/jwt/reissue") && "POST".equalsIgnoreCase(request.getMethod()));
+        return !(request.getRequestURI().equals("/security/jwt/reissue")
+                && "POST".equalsIgnoreCase(request.getMethod()));
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
         log.info("JwtReissueFilter 실행");
 
@@ -82,9 +83,9 @@ public class JwtReissueFilter extends OncePerRequestFilter {
         // DB에 Refresh 토큰이 존재하는지 검증
         String uid = jwtUtil.getUid(refreshToken);
 
-        Object redisRefreshToken = redisTemplate.opsForValue().get(uid);
+        String storedRefreshToken = refreshTokenRedisRepository.getRefreshToken(uid);
 
-        if (redisRefreshToken == null || !redisRefreshToken.toString().equals(refreshToken)) {
+        if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
 
             throw new SecurityAuthenticationException("서버에 일치하는 리프레시 토큰이 존재하지 않습니다.");
         }
@@ -98,17 +99,9 @@ public class JwtReissueFilter extends OncePerRequestFilter {
 
         log.info("새로운 Access, Refresh 토큰 발급 완료");
 
-        // Redis에 기존에 존재하는 Refresh 토큰 삭제
-        redisTemplate.delete(String.valueOf(uid));
-
-        log.info("Redis에서 기존 Refresh 토큰 삭제 완료");
-
-        // Redis에 Refresh 토큰 저장
-        String redisKey = String.valueOf(uid);
-
-        log.info("Redis에 새로운 Refresh 토큰 저장 완료");
-
-        redisTemplate.opsForValue().set(redisKey, newRefreshToken, 86_400_000L, TimeUnit.MILLISECONDS);
+        // Redis에서 기존 Refresh 토큰 삭제 및 새로운 토큰 저장
+        refreshTokenRedisRepository.deleteRefreshToken(uid);
+        refreshTokenRedisRepository.saveRefreshToken(uid, newRefreshToken);
 
         ApiResponse<?> apiResponse = ApiResponse.success();
 
@@ -126,8 +119,8 @@ public class JwtReissueFilter extends OncePerRequestFilter {
     private Cookie createCookie(String key, String value) {
 
         Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24*60*60);
-        //cookie.setSecure(true);
+        cookie.setMaxAge(24 * 60 * 60);
+        // cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
 

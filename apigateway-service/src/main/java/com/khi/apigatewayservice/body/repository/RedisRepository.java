@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 
 @Repository
 @RequiredArgsConstructor
-public class ProductAuthRedisRepository {
+public class RedisRepository {
 
     private final ReactiveRedisTemplate<String, String> reactiveRedisTemplate;
 

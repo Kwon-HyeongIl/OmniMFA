@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
+import com.khi.securityservice.security.repository.RedisRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -23,7 +23,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -32,12 +31,13 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtUtil jwtUtil;
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisRepository refreshTokenRedisRepository;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+            Authentication authentication) throws IOException, ServletException {
 
         log.info("Form 로그인 Success Handler 실행");
 
@@ -56,7 +56,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         String refreshToken = jwtUtil.createJwt(JwtTokenType.REFRESH, uid, role, 86_400_000L);
 
         // Redis에 Refresh 토큰 저장
-        redisTemplate.opsForValue().set(uid, refreshToken, 86_400_000L, TimeUnit.MILLISECONDS);
+        refreshTokenRedisRepository.saveRefreshToken(uid, refreshToken);
 
         log.info("Redis에 Refresh 토큰 저장 완료");
 
@@ -77,8 +77,8 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private Cookie createCookie(String key, String value) {
 
         Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24*60*60);
-        //cookie.setSecure(true);
+        cookie.setMaxAge(24 * 60 * 60);
+        // cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
 

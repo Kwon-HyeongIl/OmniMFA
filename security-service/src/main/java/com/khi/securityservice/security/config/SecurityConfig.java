@@ -14,7 +14,7 @@ import com.khi.securityservice.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.RedisTemplate;
+import com.khi.securityservice.security.repository.RedisRepository;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -41,7 +41,7 @@ public class SecurityConfig {
         private final BCryptPasswordEncoder passwordEncoder;
         private final ObjectMapper objectMapper;
         private final JwtUtil jwtUtil;
-        private final RedisTemplate<String, Object> redisTemplate;
+        private final RedisRepository refreshTokenRedisRepository;
 
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -131,12 +131,12 @@ public class SecurityConfig {
         @Bean
         public JwtReissueFilter jwtReissueFilter() {
 
-                return new JwtReissueFilter(jwtUtil, redisTemplate, objectMapper);
+                return new JwtReissueFilter(jwtUtil, refreshTokenRedisRepository, objectMapper);
         }
 
         @Bean
         public JwtLogoutFilter jwtLogoutFilter() {
 
-                return new JwtLogoutFilter(jwtUtil, redisTemplate, objectMapper);
+                return new JwtLogoutFilter(jwtUtil, refreshTokenRedisRepository, objectMapper);
         }
 }

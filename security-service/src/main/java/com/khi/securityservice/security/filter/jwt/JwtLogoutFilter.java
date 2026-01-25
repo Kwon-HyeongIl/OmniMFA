@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
+import com.khi.securityservice.security.repository.RedisRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -27,7 +27,7 @@ public class JwtLogoutFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisRepository refreshTokenRedisRepository;
 
     private final ObjectMapper objectMapper;
 
@@ -38,7 +38,8 @@ public class JwtLogoutFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
         log.info("JwtLogoutFilter 실행");
 
@@ -82,19 +83,17 @@ public class JwtLogoutFilter extends OncePerRequestFilter {
         // DB에 Refresh 토큰이 존재하는지 검증
         String uid = jwtUtil.getUid(refreshToken);
 
-        Object redisRefreshToken = redisTemplate.opsForValue().get(uid);
+        String storedRefreshToken = refreshTokenRedisRepository.getRefreshToken(uid);
 
-        if (redisRefreshToken == null || !redisRefreshToken.toString().equals(refreshToken)) {
+        if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
 
             throw new SecurityAuthenticationException("서버에 일치하는 리프레시 토큰이 존재하지 않습니다.");
         }
 
         log.info("Refresh 토큰 검증 완료");
 
-        // Redis에 기존에 존재하는 Refresh 토큰 삭제
-        redisTemplate.delete(uid);
-
-        log.info("Redis에서 Refresh 토큰 삭제 완료");
+        // Redis에서 Refresh 토큰 삭제
+        refreshTokenRedisRepository.deleteRefreshToken(uid);
 
         Cookie cookie = new Cookie("Refresh-Token", null);
         cookie.setMaxAge(0);

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.khi.onboardingservice.body.dto.request.EnrollRequestDto;
 import com.khi.onboardingservice.body.dto.response.EnrollResponseDto;
 import com.khi.onboardingservice.body.entity.ProductEntity;
-import com.khi.onboardingservice.body.repository.ProductAuthRedisRepository;
+import com.khi.onboardingservice.body.repository.RedisRepository;
 import com.khi.onboardingservice.body.repository.ProductRepository;
 
 import java.util.UUID;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductService {
 
-    private final ProductAuthRedisRepository productAuthRedisRepository;
+    private final RedisRepository productAuthRedisRepository;
     private final ProductRepository productRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
