@@ -1,7 +1,7 @@
 package com.khi.apigatewayservice.body.repository;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class RedisRepository {
 
-    private final ReactiveRedisTemplate<String, String> reactiveRedisTemplate;
+    private final ReactiveStringRedisTemplate reactiveRedisTemplate;
 
     private static final String KEY_PREFIX = "product:auth:";
 

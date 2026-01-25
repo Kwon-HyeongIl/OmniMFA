@@ -1,14 +1,14 @@
 package com.khi.onboardingservice.body.repository;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
 public class RedisRepository {
 
-    private final RedisTemplate<String, String> redisTemplate;
+    private final StringRedisTemplate redisTemplate;
 
     private static final String KEY_PREFIX = "product:auth:";
 

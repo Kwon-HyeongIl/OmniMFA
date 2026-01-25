@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.concurrent.TimeUnit;
@@ -13,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class RedisRepository {
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final StringRedisTemplate redisTemplate;
 
     private static final long REFRESH_TOKEN_TTL = 86_400_000L; // 24시간
 
@@ -24,7 +25,7 @@ public class RedisRepository {
     }
 
     public String getRefreshToken(String uid) {
-        return (String) redisTemplate.opsForValue().get(uid);
+        return redisTemplate.opsForValue().get(uid);
     }
 
     public void deleteRefreshToken(String uid) {
