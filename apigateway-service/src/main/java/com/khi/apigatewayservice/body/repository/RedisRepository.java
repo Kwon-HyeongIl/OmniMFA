@@ -11,15 +11,11 @@ public class RedisRepository {
 
     private final ReactiveStringRedisTemplate reactiveRedisTemplate;
 
-    private static final String KEY_PREFIX = "product:auth:";
-
     public Mono<String> getHashedSecretByProductId(String productId) {
-        String key = KEY_PREFIX + productId;
-        return reactiveRedisTemplate.opsForValue().get(key);
+        return reactiveRedisTemplate.opsForValue().get(productId);
     }
 
     public Mono<Boolean> saveHashedSecretByProductId(String productId, String hashedSecret) {
-        String key = KEY_PREFIX + productId;
-        return reactiveRedisTemplate.opsForValue().set(key, hashedSecret);
+        return reactiveRedisTemplate.opsForValue().set(productId, hashedSecret);
     }
 }
