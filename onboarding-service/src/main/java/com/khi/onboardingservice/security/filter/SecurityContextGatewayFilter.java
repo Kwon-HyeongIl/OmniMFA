@@ -25,7 +25,7 @@ import java.util.Set;
 public class SecurityContextGatewayFilter extends OncePerRequestFilter {
 
     private static final Map<String, Set<HttpMethod>> FILTERED_PATHS = Map.ofEntries(
-            Map.entry("/onboarding/enroll", Set.of(HttpMethod.POST)));
+            Map.entry("/onboarding/product/enroll", Set.of(HttpMethod.POST)));
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {

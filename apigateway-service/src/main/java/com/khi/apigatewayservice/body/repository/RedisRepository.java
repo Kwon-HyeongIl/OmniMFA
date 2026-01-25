@@ -17,4 +17,9 @@ public class RedisRepository {
         String key = KEY_PREFIX + productId;
         return reactiveRedisTemplate.opsForValue().get(key);
     }
+
+    public Mono<Boolean> saveHashedSecretByProductId(String productId, String hashedSecret) {
+        String key = KEY_PREFIX + productId;
+        return reactiveRedisTemplate.opsForValue().set(key, hashedSecret);
+    }
 }

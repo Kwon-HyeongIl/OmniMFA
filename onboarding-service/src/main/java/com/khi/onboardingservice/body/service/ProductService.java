@@ -11,6 +11,7 @@ import com.khi.onboardingservice.body.entity.ProductEntity;
 import com.khi.onboardingservice.body.repository.RedisRepository;
 import com.khi.onboardingservice.body.repository.ProductRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -40,5 +41,10 @@ public class ProductService {
         productAuthRedisRepository.saveProductAuth(productId, hashedProductSecret);
 
         return new EnrollResponseDto(productId, productSecret);
+    }
+
+    public Optional<String> getHashedSecretByProductId(String productId) {
+        return productRepository.findById(productId)
+                .map(ProductEntity::getHashedProductSecret);
     }
 }
