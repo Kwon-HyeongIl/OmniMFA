@@ -16,7 +16,7 @@ class SecurityGatewayFilterTest {
     @DisplayName("특정 요청 메서드 타입만 필터링 하는지 여부 확인")
     void shouldNotFilterTest() throws Exception {
 
-        SecurityGatewayFilter filter = new SecurityGatewayFilter();
+        SecurityContextGatewayFilter filter = new SecurityContextGatewayFilter();
 
         MockHttpServletRequest r1 = new MockHttpServletRequest("POST", "/onboarding/enroll");
         MockHttpServletRequest r2 = new MockHttpServletRequest("GET", "/onboarding/enroll");
@@ -31,7 +31,7 @@ class SecurityGatewayFilterTest {
     @DisplayName("정상 동작 여부 확인")
     void doFilterTest() throws Exception {
 
-        SecurityGatewayFilter filter = new SecurityGatewayFilter();
+        SecurityContextGatewayFilter filter = new SecurityContextGatewayFilter();
 
         MockHttpServletRequest request = new MockHttpServletRequest("POST", "/onboarding/enroll");
 

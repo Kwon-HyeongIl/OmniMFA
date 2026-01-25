@@ -43,6 +43,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
 
+                        /* Domain */
                         .requestMatchers(HttpMethod.POST, "/totp/setup").permitAll()
                         .requestMatchers(HttpMethod.POST, "/totp/verify").permitAll()
 

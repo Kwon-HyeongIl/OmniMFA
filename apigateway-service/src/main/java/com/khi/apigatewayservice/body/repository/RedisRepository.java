@@ -1,0 +1,25 @@
+package com.khi.apigatewayservice.body.repository;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
+
+@Repository
+@RequiredArgsConstructor
+public class RedisRepository {
+
+    private final ReactiveStringRedisTemplate reactiveRedisTemplate;
+
+    private static final String KEY_PREFIX = "product:auth:";
+
+    public Mono<String> getHashedSecretByProductId(String productId) {
+        String key = KEY_PREFIX + productId;
+        return reactiveRedisTemplate.opsForValue().get(key);
+    }
+
+    public Mono<Boolean> saveHashedSecretByProductId(String productId, String hashedSecret) {
+        String key = KEY_PREFIX + productId;
+        return reactiveRedisTemplate.opsForValue().set(key, hashedSecret);
+    }
+}
