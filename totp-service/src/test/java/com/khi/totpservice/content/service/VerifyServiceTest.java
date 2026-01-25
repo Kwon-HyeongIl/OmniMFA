@@ -1,11 +1,13 @@
 package com.khi.totpservice.content.service;
 
-import com.khi.totpservice.content.entity.TotpClientEntity;
-import com.khi.totpservice.content.repository.TotpClientRepository;
 import dev.samstevens.totp.code.DefaultCodeGenerator;
 import dev.samstevens.totp.time.SystemTimeProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import com.khi.totpservice.body.entity.TotpClientEntity;
+import com.khi.totpservice.body.repository.TotpClientRepository;
+import com.khi.totpservice.body.service.VerifyService;
 
 import java.util.Optional;
 

@@ -1,7 +1,8 @@
 package com.khi.onboardingservice.security.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.khi.onboardingservice.common.api.ApiResponse;
+import com.khi.onboardingservice.api.api.ApiResponse;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

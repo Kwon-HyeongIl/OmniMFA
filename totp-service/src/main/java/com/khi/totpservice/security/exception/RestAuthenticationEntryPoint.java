@@ -1,7 +1,8 @@
 package com.khi.totpservice.security.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.khi.totpservice.common.api.ApiResponse;
+import com.khi.totpservice.api.api.ApiResponse;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
