@@ -6,15 +6,21 @@ spring:
   application:
     name: apigateway-service
 
+  data:
+    redis:
+      host: redis-k8ssvc
+      port: 6379
+      database: 0 # 제품 인증 정보 캐시
+
   cloud:
     gateway:
       server:
         webflux:
           globalcors:
             cors-configurations:
-              '[/**]':
-                allowedMethods: '*'
-                allowedHeaders: '*'
+              "[/**]":
+                allowedMethods: "*"
+                allowedHeaders: "*"
                 allowCredentials: true
 
           routes:
