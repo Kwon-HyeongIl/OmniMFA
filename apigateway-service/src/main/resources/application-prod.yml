@@ -97,3 +97,8 @@ springdoc:
 
 jwt:
   secret: ${JWT-SECRET}
+
+# 제품 인증 정보를 가져와서 Redis에 저장하기 위함
+onboarding:
+  service:
+    url: http://onboarding-k8ssvc

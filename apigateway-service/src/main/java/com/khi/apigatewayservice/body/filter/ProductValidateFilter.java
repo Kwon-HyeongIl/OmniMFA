@@ -2,6 +2,7 @@ package com.khi.apigatewayservice.body.filter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.http.HttpMethod;
@@ -26,6 +27,9 @@ public class ProductValidateFilter implements GlobalFilter {
     private final RedisRepository redisRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final WebClient.Builder webClientBuilder;
+
+    @Value("${onboarding.service.url}")
+    private String onboardingServiceUrl;
 
     private static final Map<String, Set<HttpMethod>> VALIDATE_PATHS = Map.ofEntries(
 
@@ -79,11 +83,11 @@ public class ProductValidateFilter implements GlobalFilter {
         return redisRepository.getHashedSecretByProductId(productId)
                 .doOnNext(secret -> log.info("Redis 캐시 히트, productId: {}", productId))
                 .switchIfEmpty(
-                    fetchFromOnboardingService(productId)
-                        .doOnNext(secret -> log.info("onboarding-service에서 조회 성공, productId: {}", productId))
-                        .flatMap(secret -> redisRepository.saveHashedSecretByProductId(productId, secret)
-                        .doOnNext(saved -> log.info("Redis에 캐시 저장 완료, productId: {}", productId))
-                        .thenReturn(secret)));
+                        fetchFromOnboardingService(productId)
+                                .doOnNext(secret -> log.info("onboarding-service에서 조회 성공, productId: {}", productId))
+                                .flatMap(secret -> redisRepository.saveHashedSecretByProductId(productId, secret)
+                                        .doOnNext(saved -> log.info("Redis에 캐시 저장 완료, productId: {}", productId))
+                                        .thenReturn(secret)));
     }
 
     // onboarding-service에서 해시된 제품 시크릿 조회
@@ -93,7 +97,7 @@ public class ProductValidateFilter implements GlobalFilter {
 
         return webClientBuilder.build()
                 .get()
-                .uri("lb://onboarding-service/onboarding/product/internal/{productId}/secret", productId)
+                .uri(onboardingServiceUrl + "/onboarding/product/internal/{productId}/secret", productId)
                 .retrieve()
                 .bodyToMono(String.class)
                 .onErrorResume(e -> {
