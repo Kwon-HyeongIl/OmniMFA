@@ -15,7 +15,7 @@ public class VerifyController {
     private final VerifyService verifyService;
 
     @PostMapping("/verify")
-    public ResponseEntity<ApiResponse<?>> verifyCode(@RequestHeader("product-id") String productId,
+    public ResponseEntity<ApiResponse<?>> verifyCode(@RequestHeader("Product-Id") String productId,
             @RequestBody VerifyRequestDto requestDto) {
 
         boolean result = verifyService.verifyCode(productId, requestDto.getProductClientUid(), requestDto.getCode());

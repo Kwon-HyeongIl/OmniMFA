@@ -16,7 +16,7 @@ public class SetupController {
     private final SetupService setupService;
 
     @PostMapping("/setup")
-    public ResponseEntity<ApiResponse<?>> setupTotp(@RequestHeader("product-id") String productId,
+    public ResponseEntity<ApiResponse<?>> setupTotp(@RequestHeader("Product-Id") String productId,
             @RequestBody SetupRequestDto requestDto) {
 
         String qrCodeDataUri = setupService.generateQrCode(productId, requestDto.getProductClientUid());

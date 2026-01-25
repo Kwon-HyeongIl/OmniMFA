@@ -18,7 +18,7 @@ import java.util.Set;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ClientValidateFilter implements GlobalFilter {
+public class ProductValidateFilter implements GlobalFilter {
 
     private final ProductAuthRedisRepository productAuthRedisRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -26,7 +26,8 @@ public class ClientValidateFilter implements GlobalFilter {
     private static final Map<String, Set<HttpMethod>> VALIDATE_PATHS = Map.ofEntries(
 
             Map.entry("/totp/setup", Set.of(HttpMethod.POST)),
-            Map.entry("/totp/verify", Set.of(HttpMethod.POST)));
+            Map.entry("/totp/verify", Set.of(HttpMethod.POST))
+        );
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -36,15 +37,15 @@ public class ClientValidateFilter implements GlobalFilter {
 
         if (!isValidationRequired(path, method)) {
 
-            log.info("ClientValidateFilter - 허용된 URL: {} {}", method, path);
+            log.info("ProductValidateFilter - 허용된 URL: {} {}", method, path);
 
             return chain.filter(exchange);
         }
 
-        log.info("ClientValidateFilter 실행");
+        log.info("ProductValidateFilter 실행");
 
-        String productId = exchange.getRequest().getHeaders().getFirst("product-id");
-        String productSecret = exchange.getRequest().getHeaders().getFirst("product-secret");
+        String productId = exchange.getRequest().getHeaders().getFirst("Product-Id");
+        String productSecret = exchange.getRequest().getHeaders().getFirst("Product-Secret");
 
         if (productId == null || productSecret == null) {
 
@@ -55,10 +56,15 @@ public class ClientValidateFilter implements GlobalFilter {
                 .switchIfEmpty(Mono.error(new RuntimeException("일치하는 제품 ID가 존재하지 않습니다.")))
                 .flatMap(hashedSecret -> {
                     boolean result = bCryptPasswordEncoder.matches(productSecret, hashedSecret);
+
                     if (result) {
-                        log.info("제품 인증 성공");
+
+                        log.info("제품 인증 성공, 제품 아이디: {}", productId);
                         return chain.filter(exchange);
+                    
                     } else {
+
+                        log.info("제품 인증 실패, 제품 아이디: {}", productId);
                         return Mono.error(new RuntimeException("제품 Secret이 일치하지 않습니다."));
                     }
                 });
