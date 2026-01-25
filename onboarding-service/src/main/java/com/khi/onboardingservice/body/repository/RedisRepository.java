@@ -10,10 +10,7 @@ public class RedisRepository {
 
     private final StringRedisTemplate redisTemplate;
 
-    private static final String KEY_PREFIX = "product:auth:";
-
     public void saveProductAuth(String productId, String hashedProductSecret) {
-        String key = KEY_PREFIX + productId;
-        redisTemplate.opsForValue().set(key, hashedProductSecret);
+        redisTemplate.opsForValue().set(productId, hashedProductSecret);
     }
 }
