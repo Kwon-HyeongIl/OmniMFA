@@ -82,12 +82,11 @@ public class ProductValidateFilter implements GlobalFilter {
 
         return redisRepository.getHashedSecretByProductId(productId)
                 .doOnNext(secret -> log.info("Redis 캐시 히트, productId: {}", productId))
-                .switchIfEmpty(
-                        fetchFromOnboardingService(productId)
-                                .doOnNext(secret -> log.info("onboarding-service에서 조회 성공, productId: {}", productId))
-                                .flatMap(secret -> redisRepository.saveHashedSecretByProductId(productId, secret)
-                                        .doOnNext(saved -> log.info("Redis에 캐시 저장 완료, productId: {}", productId))
-                                        .thenReturn(secret)));
+                .switchIfEmpty(Mono.defer(() -> fetchFromOnboardingService(productId)
+                        .doOnNext(secret -> log.info("onboarding-service에서 조회 성공, productId: {}", productId))
+                        .flatMap(secret -> redisRepository.saveHashedSecretByProductId(productId, secret)
+                                .doOnNext(saved -> log.info("Redis에 캐시 저장 완료, productId: {}", productId))
+                                .thenReturn(secret))));
     }
 
     // onboarding-service에서 해시된 제품 시크릿 조회
