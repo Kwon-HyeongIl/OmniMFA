@@ -16,21 +16,22 @@ public class RedisRepository {
 
     private final StringRedisTemplate redisTemplate;
 
+    private static final String KEY_PREFIX = "auth:refresh:";
     private static final long REFRESH_TOKEN_TTL = 86_400_000L; // 24시간
 
     public void saveRefreshToken(String uid, String refreshToken) {
 
-        redisTemplate.opsForValue().set(uid, refreshToken, REFRESH_TOKEN_TTL, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(KEY_PREFIX + uid, refreshToken, REFRESH_TOKEN_TTL, TimeUnit.MILLISECONDS);
         log.info("Redis에 새로운 Refresh 토큰 저장 완료");
     }
 
     public String getRefreshToken(String uid) {
-        return redisTemplate.opsForValue().get(uid);
+        return redisTemplate.opsForValue().get(KEY_PREFIX + uid);
     }
 
     public void deleteRefreshToken(String uid) {
 
-        redisTemplate.delete(uid);
+        redisTemplate.delete(KEY_PREFIX + uid);
         log.info("Redis에서 기존 Refresh 토큰 삭제 완료");
     }
 }
