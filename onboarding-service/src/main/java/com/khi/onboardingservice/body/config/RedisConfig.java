@@ -1,26 +1,23 @@
-package com.khi.apigatewayservice.body.config;
+package com.khi.onboardingservice.body.config;
 
 import io.lettuce.core.ReadFrom;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.ReactiveRedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-public class ReactiveRedisConfig {
+public class RedisConfig {
 
     /*
         쓰기 작업은 master 노드로,
         읽기 작업은 slave(replica) 노드로 설정
     */
     @Bean
-    public ReactiveRedisConnectionFactory reactiveRedisConnectionFactory(RedisProperties redisProperties) {
+    public RedisConnectionFactory redisConnectionFactory(RedisProperties redisProperties) {
 
         RedisSentinelConfiguration sentinelConfig = new RedisSentinelConfiguration()
                 .master(redisProperties.getSentinel().getMaster());
@@ -34,20 +31,5 @@ public class ReactiveRedisConfig {
                 .build();
 
         return new LettuceConnectionFactory(sentinelConfig, clientConfig);
-    }
-
-    @Bean
-    public ReactiveRedisTemplate<String, String> reactiveRedisTemplate(
-            ReactiveRedisConnectionFactory connectionFactory) {
-
-        RedisSerializationContext<String, String> serializationContext = RedisSerializationContext
-                .<String, String>newSerializationContext(new StringRedisSerializer())
-                .key(new StringRedisSerializer())
-                .value(new StringRedisSerializer())
-                .hashKey(new StringRedisSerializer())
-                .hashValue(new StringRedisSerializer())
-                .build();
-
-        return new ReactiveRedisTemplate<>(connectionFactory, serializationContext);
     }
 }
