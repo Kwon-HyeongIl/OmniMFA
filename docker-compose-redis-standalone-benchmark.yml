@@ -1,0 +1,13 @@
+services:
+  redis-benchmark:
+    image: redis:latest
+    container_name: redis-benchmark
+    ports:
+      - "6380:6379"
+    command: redis-server --save "" --appendonly no
+    networks:
+      - benchmark-network
+
+networks:
+  benchmark-network:
+    driver: bridge
