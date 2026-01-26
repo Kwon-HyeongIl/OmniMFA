@@ -10,7 +10,7 @@ spring:
     redis:
       host: redis-k8ssvc
       port: 6379
-      database: 0 # 제품 인증 정보 캐시
+      database: 1 # 제품 인증 정보 캐시
 
   cloud:
     gateway:
