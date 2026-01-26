@@ -9,13 +9,13 @@ import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 
+/*
+ * 쓰기 작업은 master 노드로,
+ * 읽기 작업은 slave(replica) 노드로 설정
+ */
 @Configuration
 public class RedisConfig {
 
-    /*
-        쓰기 작업은 master 노드로,
-        읽기 작업은 slave(replica) 노드로 설정
-    */
     @Bean
     public RedisConnectionFactory redisConnectionFactory(RedisProperties redisProperties) {
 
