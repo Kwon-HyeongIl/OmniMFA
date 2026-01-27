@@ -49,6 +49,11 @@ public class SecurityConfig {
                 // 경로별 인가 작업
                 http
                                 .authorizeHttpRequests((auth) -> auth
+
+                                                /* Internal API */
+                                                .requestMatchers(HttpMethod.GET, "/onboarding/product/internal/**")
+                                                .permitAll()
+
                                                 /* Swagger */
                                                 .requestMatchers(HttpMethod.GET, "/swagger-ui/index.html").permitAll()
                                                 .requestMatchers(HttpMethod.GET, "/swagger-ui/swagger-ui.css")
