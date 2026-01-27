@@ -23,6 +23,9 @@ public class SetupService {
     private final TotpClientRepository totpClientRepository;
     private final OnboardingFeignClient onboardingFeignClient;
 
+    @net.devh.boot.grpc.client.inject.GrpcClient("onboarding-service")
+    private com.khi.product.grpc.ProductGrpcServiceGrpc.ProductGrpcServiceBlockingStub productGrpcServiceBlockingStub;
+
     public String generateQrCode(String productId, String productClientUid) {
 
         SecretGenerator secretGenerator = new DefaultSecretGenerator();
@@ -35,8 +38,16 @@ public class SetupService {
         client.setEnabled(true);
         totpClientRepository.save(client);
 
-        String productName = onboardingFeignClient.getProductNameByProductId(productId)
-                .orElse(productId);
+        com.khi.product.grpc.ProductRequest grpcRequest = com.khi.product.grpc.ProductRequest.newBuilder()
+                .setProductId(productId)
+                .build();
+
+        String productName;
+        try {
+            productName = productGrpcServiceBlockingStub.getProductName(grpcRequest).getProductName();
+        } catch (Exception e) {
+            productName = productId; // Fallback to ID if gRPC fails
+        }
 
         QrData data = new QrData.Builder()
                 .label(productName + ":" + productClientUid)

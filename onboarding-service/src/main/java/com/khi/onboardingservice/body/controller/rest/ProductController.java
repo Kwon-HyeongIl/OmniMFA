@@ -1,4 +1,4 @@
-package com.khi.onboardingservice.body.controller;
+package com.khi.onboardingservice.body.controller.rest;
 
 import com.khi.onboardingservice.api.api.ApiResponse;
 import com.khi.onboardingservice.body.dto.request.EnrollRequestDto;
