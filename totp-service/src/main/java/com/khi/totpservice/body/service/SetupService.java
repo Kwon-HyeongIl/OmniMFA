@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.khi.totpservice.body.entity.TotpClientEntity;
 import com.khi.totpservice.body.repository.TotpClientRepository;
+import com.khi.totpservice.client.OnboardingFeignClient;
 
 import static dev.samstevens.totp.util.Utils.getDataUriForImage;
 
@@ -20,6 +21,7 @@ import static dev.samstevens.totp.util.Utils.getDataUriForImage;
 public class SetupService {
 
     private final TotpClientRepository totpClientRepository;
+    private final OnboardingFeignClient onboardingFeignClient;
 
     public String generateQrCode(String productId, String productClientUid) {
 
@@ -33,8 +35,11 @@ public class SetupService {
         client.setEnabled(true);
         totpClientRepository.save(client);
 
+        String productName = onboardingFeignClient.getProductNameByProductId(productId)
+                .orElse(productId);
+
         QrData data = new QrData.Builder()
-                .label(productId + ":" + productClientUid)
+                .label(productName + ":" + productClientUid)
                 .secret(totpSecretKey) // totpSecretKey로 qr을 구분
                 .issuer("OmniMFA")
                 .algorithm(HashingAlgorithm.SHA1)

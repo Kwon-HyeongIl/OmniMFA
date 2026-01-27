@@ -28,6 +28,9 @@ dependencies {
     /* Eureka */
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
+    /* Feign */
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
     /* Secret */
     implementation 'org.apache.commons:commons-lang3:3.12.0'
 
