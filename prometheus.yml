@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 2s
+
+scrape_configs:
+  - job_name: "totp-service"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["totp-service:8083"]
