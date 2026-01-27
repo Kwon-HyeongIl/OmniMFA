@@ -1,4 +1,4 @@
-package com.khi.onboardingservice.body.controller;
+package com.khi.onboardingservice.body.controller.rest;
 
 import com.khi.onboardingservice.api.api.ApiResponse;
 import com.khi.onboardingservice.body.dto.request.EnrollRequestDto;
@@ -42,11 +42,19 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.success(reponseDto));
     }
 
+    // [Internal API]
     @GetMapping("/internal/{productId}/secret")
     public Optional<String> getHashedSecretByProductId(@PathVariable String productId) {
 
         log.info("Internal API - 제품 secret 조회 요청, productId: {}", productId);
-
         return productService.getHashedSecretByProductId(productId);
+    }
+
+    // [Internal API]
+    @GetMapping("/internal/{productId}/name")
+    public Optional<String> getProductNameByProductId(@PathVariable String productId) {
+
+        log.info("Internal API - 제품 이름 조회 요청, productId: {}", productId);
+        return productService.getProductNameByProductId(productId);
     }
 }

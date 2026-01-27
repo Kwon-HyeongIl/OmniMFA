@@ -2,6 +2,8 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.5'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.google.protobuf' version '0.9.4'
+    id 'com.google.osdetector' version '1.7.3'
 }
 
 group = 'com.khi'
@@ -28,11 +30,20 @@ dependencies {
     /* Eureka */
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
+    /* Feign */
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
     /* Secret */
     implementation 'org.apache.commons:commons-lang3:3.12.0'
 
     /* Totp */
     implementation 'dev.samstevens.totp:totp:1.7.1'
+
+    /* gRPC */
+    implementation 'net.devh:grpc-client-spring-boot-starter:3.1.0.RELEASE'
+    implementation 'io.grpc:grpc-stub:1.60.0'
+    implementation 'io.grpc:grpc-protobuf:1.60.0'
+    compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
 
     /* Health */
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -59,6 +70,22 @@ dependencyManagement{
     }
 }
 
-tasks.named('test') {
+    tasks.named('test') {
     useJUnitPlatform()
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.25.1"
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:1.60.0"
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
 }

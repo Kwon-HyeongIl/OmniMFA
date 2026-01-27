@@ -34,7 +34,10 @@ public class ProductValidateFilter implements GlobalFilter {
     private static final Map<String, Set<HttpMethod>> VALIDATE_PATHS = Map.ofEntries(
 
             Map.entry("/totp/setup", Set.of(HttpMethod.POST)),
-            Map.entry("/totp/verify", Set.of(HttpMethod.POST)));
+            Map.entry("/totp/verify", Set.of(HttpMethod.POST)),
+            
+            Map.entry("/totp/test/rest/setup", Set.of(HttpMethod.POST)),
+            Map.entry("/totp/test/grpc/setup", Set.of(HttpMethod.POST)));
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {

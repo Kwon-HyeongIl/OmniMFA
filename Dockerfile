@@ -1,7 +1,9 @@
 # Stage 1: 전달받은 특정 서비스를 빌드
-FROM amazoncorretto:21-alpine-jdk AS builder
+# Alpine 대신 glibc가 포함된 일반 Linux 이미지를 사용하여 gRPC 빌드 호환성 문제 해결
+FROM amazoncorretto:21 AS builder
 
 ARG SERVICE_NAME
+
 WORKDIR /app
 COPY . .
 WORKDIR /app/${SERVICE_NAME}
@@ -12,7 +14,6 @@ RUN ./gradlew bootJar
 # Stage 2: 최종 경량 이미지 생성
 FROM amazoncorretto:21-alpine-jdk
 
-# healthcheck에 필요한 curl 패키지
 RUN apk add --no-cache curl
 
 WORKDIR /app

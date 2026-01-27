@@ -8,18 +8,26 @@ import dev.samstevens.totp.qr.ZxingPngQrGenerator;
 import dev.samstevens.totp.secret.DefaultSecretGenerator;
 import dev.samstevens.totp.secret.SecretGenerator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 
 import com.khi.totpservice.body.entity.TotpClientEntity;
 import com.khi.totpservice.body.repository.TotpClientRepository;
+import com.khi.totpservice.client.OnboardingFeignClient;
 
 import static dev.samstevens.totp.util.Utils.getDataUriForImage;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SetupService {
 
     private final TotpClientRepository totpClientRepository;
+    private final OnboardingFeignClient onboardingFeignClient;
+
+    @net.devh.boot.grpc.client.inject.GrpcClient("onboarding-service")
+    private com.khi.product.grpc.ProductGrpcServiceGrpc.ProductGrpcServiceBlockingStub productGrpcServiceBlockingStub;
 
     public String generateQrCode(String productId, String productClientUid) {
 
@@ -33,8 +41,17 @@ public class SetupService {
         client.setEnabled(true);
         totpClientRepository.save(client);
 
+        // gRPC를 사용하여 제품 이름 조회
+        log.info("gRPC 요청 송신 시작");
+        com.khi.product.grpc.ProductRequest grpcRequest = com.khi.product.grpc.ProductRequest.newBuilder()
+                .setProductId(productId)
+                .build();
+
+        String productName = productGrpcServiceBlockingStub.getProductName(grpcRequest).getProductName();
+        log.info("gRPC 요청 수신 완료");
+
         QrData data = new QrData.Builder()
-                .label(productId + ":" + productClientUid)
+                .label(productName + ":" + productClientUid)
                 .secret(totpSecretKey) // totpSecretKey로 qr을 구분
                 .issuer("OmniMFA")
                 .algorithm(HashingAlgorithm.SHA1)

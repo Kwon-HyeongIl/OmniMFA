@@ -44,7 +44,14 @@ public class ProductService {
     }
 
     public Optional<String> getHashedSecretByProductId(String productId) {
+
         return productRepository.findById(productId)
                 .map(ProductEntity::getHashedProductSecret);
+    }
+
+    public Optional<String> getProductNameByProductId(String productId) {
+        
+        return productRepository.findById(productId)
+                .map(ProductEntity::getProductName);
     }
 }
