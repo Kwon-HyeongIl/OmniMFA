@@ -46,15 +46,12 @@ public class LoadTestController {
             long durationNs = endTime - startTime;
             timer.record(durationNs, TimeUnit.NANOSECONDS);
 
-            long durationMs = durationNs / 1_000_000;
-            totalDuration += durationMs;
-
-            // log.info("REST Iteration {}: {} ms", i, durationMs);
+            totalDuration += durationNs;
         }
 
-        double average = totalDuration / 100000.0;
+        double average = (totalDuration / 100000.0) / 1_000_000.0;
         log.info("REST Average Latency (excl. warmup): {} ms", average);
-        result.append(String.format("평균 (100,000 회): %.2f ms", average));
+        result.append(String.format("평균 (100,000 회): %.4f ms", average));
 
         return result.toString();
     }
@@ -85,15 +82,12 @@ public class LoadTestController {
             long durationNs = endTime - startTime;
             timer.record(durationNs, TimeUnit.NANOSECONDS);
 
-            long durationMs = durationNs / 1_000_000;
-            totalDuration += durationMs;
-
-            // log.info("gRPC Iteration {}: {} ms", i, durationMs);
+            totalDuration += durationNs;
         }
 
-        double average = totalDuration / 100000.0;
+        double average = (totalDuration / 100000.0) / 1_000_000.0;
         log.info("gRPC Average Latency (excl. warmup): {} ms", average);
-        result.append(String.format("평균 (100,000 회): %.2f ms", average));
+        result.append(String.format("평균 (100,000 회): %.4f ms", average));
 
         return result.toString();
     }
