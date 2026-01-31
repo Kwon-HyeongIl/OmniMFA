@@ -67,6 +67,7 @@ public class SecurityConfig {
 
                                                 /* Health */
                                                 .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
+                                                .requestMatchers(HttpMethod.GET, "/actuator/prometheus").permitAll()
 
                                                 .requestMatchers("/security/admin").hasRole("ADMIN")
 
