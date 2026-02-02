@@ -42,12 +42,12 @@ spec:
         - name: initdb
           configMap:
             name: mysql-initdb
-            
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql
+  name: mysql-k8ssvc
 spec:
   ports:
     - port: 3306

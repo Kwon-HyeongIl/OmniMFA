@@ -20,12 +20,12 @@ spec:
           env:
             - name: GF_SECURITY_ADMIN_PASSWORD
               value: "admin"
-              
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: grafana
+  name: grafana-k8ssvc
 spec:
   ports:
     - port: 3000

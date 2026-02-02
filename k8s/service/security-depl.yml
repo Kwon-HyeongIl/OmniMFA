@@ -36,7 +36,7 @@ spec:
                   name: omnimfa-secret
                   key: REDIS-PASSWORD
             - name: DATASOURCE-URL
-              value: "jdbc:mysql://mysql:3306/security?useSSL=false"
+              value: "jdbc:mysql://mysql-k8ssvc:3306/security?useSSL=false"
             - name: DATASOURCE-USERNAME
               value: "root"
             - name: DATASOURCE-PASSWORD
