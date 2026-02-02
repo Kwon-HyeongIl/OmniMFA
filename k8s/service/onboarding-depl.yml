@@ -30,7 +30,12 @@ spec:
             - name: SPRING_DATA_REDIS_SENTINEL_MASTER
               value: "mymaster"
             - name: SPRING_DATA_REDIS_SENTINEL_NODES
-              value: "redis-sentinel:26379"
+              value: "redis:26379"
+            - name: SPRING_DATA_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omnimfa-secret
+                  key: REDIS-PASSWORD
             - name: DATASOURCE-URL
               value: "jdbc:mysql://mysql:3306/onboarding?useSSL=false"
             - name: DATASOURCE-USERNAME
