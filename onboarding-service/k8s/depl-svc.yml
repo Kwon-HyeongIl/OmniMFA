@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: onboarding-service-depl
-  namespace: omnimfa
 spec:
   replicas: 1
   selector:
@@ -15,9 +14,11 @@ spec:
     spec:
       containers:
         - name: onboarding-container
-          image: 246233007938.dkr.ecr.ap-northeast-2.amazonaws.com/onboarding-service:initial
+          image: onboarding-service:latest
+          imagePullPolicy: Never
           ports:
             - containerPort: 8080
+            - containerPort: 9090
           resources:
             limits:
               cpu: "1"
@@ -25,30 +26,25 @@ spec:
             requests:
               cpu: "0.5"
               memory: "250Mi"
-
           env:
             - name: SPRING_DATA_REDIS_SENTINEL_MASTER
               value: "mymaster"
             - name: SPRING_DATA_REDIS_SENTINEL_NODES
-              value: "redis-node-0.redis-headless.omnimfa.svc.cluster.local:26379,redis-node-1.redis-headless.omnimfa.svc.cluster.local:26379,redis-node-2.redis-headless.omnimfa.svc.cluster.local:26379"
+              value: "redis-sentinel:26379"
             - name: DATASOURCE-URL
-              value: "jdbc:mysql://omnimfa-database.cx806ocaco0v.ap-northeast-2.rds.amazonaws.com:3306/onboarding?useSSL=false"
-
+              value: "jdbc:mysql://mysql:3306/onboarding?useSSL=false"
             - name: DATASOURCE-USERNAME
               value: "root"
-
             - name: DATASOURCE-PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: omnimfa-secret
                   key: MYSQL-PASSWORD
-
             - name: JWT-SECRET
               valueFrom:
                 secretKeyRef:
                   name: omnimfa-secret
                   key: JWT-SECRET
-
           readinessProbe:
             httpGet:
               path: /actuator/health
@@ -59,11 +55,14 @@ apiVersion: v1
 kind: Service
 metadata:
   name: onboarding-k8ssvc
-  namespace: omnimfa
 spec:
   type: ClusterIP
   ports:
-    - port: 80
+    - name: http
+      port: 80
       targetPort: 8080
+    - name: grpc
+      port: 9090
+      targetPort: 9090
   selector:
     app: onboarding-service-depl
