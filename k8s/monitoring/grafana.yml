@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: grafana
-  namespace: monitoring
 spec:
   replicas: 1
   selector:
@@ -18,23 +17,17 @@ spec:
           image: grafana/grafana
           ports:
             - containerPort: 3000
-          resources:
-            limits:
-              cpu: "1"
-              memory: "500Mi"
-            requests:
-              cpu: "0.5"
-              memory: "250Mi"
-
+          env:
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              value: "admin"
+              
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: grafana-k8ssvc
-  namespace: monitoring
+  name: grafana
 spec:
   ports:
     - port: 3000
-      targetPort: 3000
   selector:
     app: grafana

@@ -8,6 +8,7 @@ data:
     CREATE DATABASE IF NOT EXISTS security;
     CREATE DATABASE IF NOT EXISTS onboarding;
     CREATE DATABASE IF NOT EXISTS totp;
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -41,6 +42,7 @@ spec:
         - name: initdb
           configMap:
             name: mysql-initdb
+            
 ---
 apiVersion: v1
 kind: Service

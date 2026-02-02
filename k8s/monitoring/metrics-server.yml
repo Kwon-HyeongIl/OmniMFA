@@ -5,6 +5,7 @@ metadata:
     k8s-app: metrics-server
   name: metrics-server
   namespace: kube-system
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -25,6 +26,7 @@ rules:
       - get
       - list
       - watch
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -48,6 +50,7 @@ rules:
       - get
       - list
       - watch
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -64,6 +67,7 @@ subjects:
   - kind: ServiceAccount
     name: metrics-server
     namespace: kube-system
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -79,6 +83,7 @@ subjects:
   - kind: ServiceAccount
     name: metrics-server
     namespace: kube-system
+
 ---
 apiVersion: v1
 kind: Service
@@ -95,6 +100,7 @@ spec:
       targetPort: https
   selector:
     k8s-app: metrics-server
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -164,6 +170,7 @@ spec:
       volumes:
         - emptyDir: {}
           name: tmp-dir
+          
 ---
 apiVersion: apiregistration.k8s.io/v1
 kind: APIService
