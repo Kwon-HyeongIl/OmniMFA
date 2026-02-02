@@ -12,17 +12,21 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.khi.product.grpc.ProductGrpcServiceGrpc;
+import com.khi.product.grpc.ProductRequest;
+import net.devh.boot.grpc.client.inject.GrpcClient;
+
 @Slf4j
 @RestController
 @RequestMapping("/totp/test")
 @RequiredArgsConstructor
-public class LoadTestController {
+public class LatencyTestController {
 
     private final OnboardingFeignClient onboardingFeignClient;
     private final MeterRegistry meterRegistry;
 
-    @net.devh.boot.grpc.client.inject.GrpcClient("onboarding-service")
-    private com.khi.product.grpc.ProductGrpcServiceGrpc.ProductGrpcServiceBlockingStub productGrpcServiceBlockingStub;
+    @GrpcClient("onboarding-service")
+    private ProductGrpcServiceGrpc.ProductGrpcServiceBlockingStub productGrpcServiceBlockingStub;
 
     @PostMapping("/rest/setup")
     public String latencyTestWithRest(@RequestHeader("Product-Id") String productId) {
@@ -34,7 +38,7 @@ public class LoadTestController {
         log.info("REST Warm-up complete");
 
         Timer timer = Timer.builder("totp.loadtest.latency")
-                .tag("type", "rest")
+                .tag("type", "개선 전 (REST 방식)")
                 .publishPercentileHistogram()
                 .register(meterRegistry);
 
@@ -61,7 +65,7 @@ public class LoadTestController {
         StringBuilder result = new StringBuilder("gRPC Latency Test (100,000 iterations):\n");
         long totalDuration = 0;
 
-        com.khi.product.grpc.ProductRequest grpcRequest = com.khi.product.grpc.ProductRequest.newBuilder()
+        ProductRequest grpcRequest = ProductRequest.newBuilder()
                 .setProductId(productId)
                 .build();
 
@@ -70,7 +74,7 @@ public class LoadTestController {
         log.info("gRPC Warm-up complete");
 
         Timer timer = Timer.builder("totp.loadtest.latency")
-                .tag("type", "grpc")
+                .tag("type", "개선 후 (gRPC 방식)")
                 .publishPercentileHistogram()
                 .register(meterRegistry);
 
