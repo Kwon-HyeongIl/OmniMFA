@@ -27,18 +27,10 @@ spec:
               memory: "250Mi"
 
           env:
-            - name: DATASOURCE-URL
-              value: "jdbc:mysql://omnimfa-database.cx806ocaco0v.ap-northeast-2.rds.amazonaws.com:3306/apigateway?useSSL=false"
-
-            - name: DATASOURCE-USERNAME
-              value: "root"
-
-            - name: DATASOURCE-PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: omnimfa-secret
-                  key: MYSQL-PASSWORD
-
+            - name: SPRING_DATA_REDIS_SENTINEL_MASTER
+              value: "mymaster"
+            - name: SPRING_DATA_REDIS_SENTINEL_NODES
+              value: "redis-node-0.redis-headless.omnimfa.svc.cluster.local:26379,redis-node-1.redis-headless.omnimfa.svc.cluster.local:26379,redis-node-2.redis-headless.omnimfa.svc.cluster.local:26379"
             - name: JWT-SECRET
               valueFrom:
                 secretKeyRef:
