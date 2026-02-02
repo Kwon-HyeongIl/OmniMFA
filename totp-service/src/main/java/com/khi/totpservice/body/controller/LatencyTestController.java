@@ -38,7 +38,7 @@ public class LatencyTestController {
         log.info("REST Warm-up complete");
 
         Timer timer = Timer.builder("totp.loadtest.latency")
-                .tag("type", "Rest")
+                .tag("type", "개선 전 (REST 방식)")
                 .publishPercentileHistogram()
                 .register(meterRegistry);
 
@@ -74,7 +74,7 @@ public class LatencyTestController {
         log.info("gRPC Warm-up complete");
 
         Timer timer = Timer.builder("totp.loadtest.latency")
-                .tag("type", "gRPC")
+                .tag("type", "개선 후 (gRPC 방식)")
                 .publishPercentileHistogram()
                 .register(meterRegistry);
 
