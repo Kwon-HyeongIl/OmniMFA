@@ -27,7 +27,7 @@ for service in "${TARGET_SERVICES[@]}"; do
 
     echo "[$service] 재배포 진행 중..."
     docker build -t $service:latest --build-arg SERVICE_NAME=$service .
-    kubectl rollout restart deployment ${service}-depl
+    kubectl rollout restart deployment ${service}-depl -n khi
     echo "[$service] 완료"
 done
 
