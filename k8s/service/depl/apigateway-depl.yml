@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: apigateway-service-depl
-  namespace: khi
+  namespace: service
 spec:
   replicas: 1
   selector:
@@ -51,7 +51,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: apigateway-k8ssvc
-  namespace: khi
+  namespace: service
 spec:
   type: ClusterIP
   ports:

@@ -4,7 +4,6 @@ set -e
 
 echo "변경된 서비스만 재배포 시작"
 
-# 전체 서비스 목록
 ALL_SERVICES=("apigateway-service" "security-service" "onboarding-service" "totp-service")
 TARGET_SERVICES=()
 
@@ -27,7 +26,7 @@ for service in "${TARGET_SERVICES[@]}"; do
 
     echo "[$service] 재배포 진행 중..."
     docker build -t $service:latest --build-arg SERVICE_NAME=$service .
-    kubectl rollout restart deployment ${service}-depl -n khi
+    kubectl rollout restart deployment ${service}-depl -n service
     echo "[$service] 완료"
 done
 

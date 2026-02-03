@@ -4,16 +4,19 @@ set -e
 
 echo "로컬 쿠버네티스 초기 배포 시작"
 
-# 1. 인프라/모니터링 배포
-echo "인프라/모니터링 배포 시작"
-kubectl apply -f k8s/infra/
-kubectl apply -f k8s/monitoring/ -n khi
+echo "네임스페이스 생성중..."
+kubectl apply -f k8s/namespace/service_namespace.yml
 
-echo "Redis (Sentinel) 설치 시작"
+echo "시크릿 생성중..."
+./k8s/secret/create_secret.sh
+
+kubectl apply -f k8s/infra/
+kubectl apply -f k8s/monitoring/
+
+echo "Redis (Sentinel) 설치중..."
 ./helm repo add bitnami https://charts.bitnami.com/bitnami
 ./helm repo update
 ./helm upgrade --install redis bitnami/redis \
-  --namespace khi \
   --set architecture=replication \
   --set sentinel.enabled=true \
   --set auth.existingSecret=omnimfa-secret \
@@ -21,15 +24,13 @@ echo "Redis (Sentinel) 설치 시작"
   --set image.tag=7.2 \
   --wait
 
-# 3. 서비스 빌드
-echo "서비스 빌드 시작"
+echo "서비스 빌드중..."
 services=("apigateway-service" "security-service" "onboarding-service" "totp-service")
 for service in "${services[@]}"; do
     docker build -t $service:latest --build-arg SERVICE_NAME=$service .
 done
 
-# 4. 서비스 배포
-echo "서비스 배포 시작"
-kubectl apply -R -f k8s/service/ -n khi
+echo "서비스 배포중..."
+kubectl apply -R -f k8s/service/ -n service
 
 echo "배포 완료"

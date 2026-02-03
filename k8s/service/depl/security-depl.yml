@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: security-service-depl
-  namespace: khi
+  namespace: service
 spec:
   replicas: 1
   selector:
@@ -37,7 +37,7 @@ spec:
                   name: omnimfa-secret
                   key: REDIS-PASSWORD
             - name: DATASOURCE-URL
-              value: "jdbc:mysql://mysql-k8ssvc:3306/security?useSSL=false"
+              value: "jdbc:mysql://mysql-k8ssvc.default:3306/omnimfa?useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true"
             - name: DATASOURCE-USERNAME
               value: "root"
             - name: DATASOURCE-PASSWORD
@@ -60,7 +60,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: security-k8ssvc
-  namespace: khi
+  namespace: service
 spec:
   type: ClusterIP
   ports:
