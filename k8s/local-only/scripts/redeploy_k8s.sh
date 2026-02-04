@@ -1,10 +1,10 @@
-# 실행 명령어: ./k8s/scripts/redeploy_k8s_local.sh
+# 실행 명령어: ./k8s/local-only/scripts/redeploy_k8s.sh
 
 set -e
 
 
 # 1. Docker Hub 로그인
-./k8s/scripts/docker_login.sh
+./k8s/local-only/scripts/docker_login.sh
 
 # 2. 변경된 서비스 탐색
 echo "변경된 서비스만 재배포 시작"

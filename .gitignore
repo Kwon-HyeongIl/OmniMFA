@@ -2,4 +2,4 @@
 helm
 
 k8s/secret/
-k8s/scripts/docker_login.sh
+k8s/local-only/scripts/docker_login.sh

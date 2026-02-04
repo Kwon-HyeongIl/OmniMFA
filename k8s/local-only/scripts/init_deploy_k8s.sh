@@ -1,4 +1,4 @@
-# 실행 명령어: ./k8s/scripts/init_deploy_k8s_local.sh
+# 실행 명령어: ./k8s/local-only/scripts/init_deploy_k8s.sh
 
 set -e
 
@@ -6,7 +6,7 @@ echo "로컬 쿠버네티스 초기 배포 시작"
 
 
 # 1. Docker Hub 로그인
-./k8s/scripts/docker_login.sh
+./k8s/local-only/scripts/docker_login.sh
 
 # 2. 네임스페이스 생성
 echo "네임스페이스 생성중..."
