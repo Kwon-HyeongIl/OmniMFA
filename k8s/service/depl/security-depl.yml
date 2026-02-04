@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
         - name: security-container
-          image: security-service:latest
-          imagePullPolicy: Never
+          image: kwonhyeongil/security-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           resources:

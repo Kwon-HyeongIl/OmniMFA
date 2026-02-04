@@ -1,5 +1,5 @@
 
 helm
 
-# Kubernetes Secrets
 k8s/secret/
+k8s/scripts/docker_login.sh

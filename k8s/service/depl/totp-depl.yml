@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
         - name: totp-container
-          image: totp-service:latest
-          imagePullPolicy: Never
+          image: kwonhyeongil/totp-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           resources:

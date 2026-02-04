@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
         - name: onboarding-container
-          image: onboarding-service:latest
-          imagePullPolicy: Never
+          image: kwonhyeongil/onboarding-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
             - containerPort: 9090
