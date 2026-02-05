@@ -27,16 +27,18 @@ spec:
               cpu: "0.5"
               memory: "250Mi"
           env:
-            - name: DATASOURCE-URL
-              value: "jdbc:mysql://mysql-k8ssvc.default:3306/omnimfa?useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true"
-            - name: DATASOURCE-USERNAME
+            - name: SERVER_PORT
+              value: "8080"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql-k8ssvc.infra.svc.cluster.local:3306/totp?useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true"
+            - name: SPRING_DATASOURCE_USERNAME
               value: "root"
-            - name: DATASOURCE-PASSWORD
+            - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: omnimfa-secret
                   key: MYSQL-PASSWORD
-            - name: JWT-SECRET
+            - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: omnimfa-secret

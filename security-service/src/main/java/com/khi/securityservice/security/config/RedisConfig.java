@@ -16,20 +16,26 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 @Configuration
 public class RedisConfig {
 
-    @Bean
-    public RedisConnectionFactory redisConnectionFactory(RedisProperties redisProperties) {
+        @Bean
+        public RedisConnectionFactory redisConnectionFactory(RedisProperties redisProperties) {
 
-        RedisSentinelConfiguration sentinelConfig = new RedisSentinelConfiguration()
-                .master(redisProperties.getSentinel().getMaster());
+                RedisSentinelConfiguration sentinelConfig = new RedisSentinelConfiguration()
+                                .master(redisProperties.getSentinel().getMaster());
 
-        redisProperties.getSentinel().getNodes()
-                .forEach(node -> sentinelConfig.sentinel(node.split(":")[0], Integer.parseInt(node.split(":")[1])));
-        sentinelConfig.setPassword(redisProperties.getPassword());
+                redisProperties.getSentinel().getNodes()
+                                .forEach(node -> sentinelConfig.sentinel(node.split(":")[0],
+                                                Integer.parseInt(node.split(":")[1])));
 
-        LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
-                .readFrom(ReadFrom.REPLICA_PREFERRED)
-                .build();
+                sentinelConfig.setPassword(redisProperties.getPassword());
+                if (redisProperties.getSentinel().getPassword() != null) {
+                        sentinelConfig.setSentinelPassword(redisProperties.getSentinel().getPassword());
+                }
+                sentinelConfig.setDatabase(redisProperties.getDatabase());
 
-        return new LettuceConnectionFactory(sentinelConfig, clientConfig);
-    }
+                LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
+                                .readFrom(ReadFrom.REPLICA_PREFERRED)
+                                .build();
+
+                return new LettuceConnectionFactory(sentinelConfig, clientConfig);
+        }
 }

@@ -27,16 +27,25 @@ spec:
               cpu: "0.5"
               memory: "250Mi"
           env:
+            - name: SERVER_PORT
+              value: "8080"
             - name: SPRING_DATA_REDIS_SENTINEL_MASTER
               value: "mymaster"
             - name: SPRING_DATA_REDIS_SENTINEL_NODES
-              value: "redis:26379"
+              value: "redis.infra.svc.cluster.local:26379"
             - name: SPRING_DATA_REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: omnimfa-secret
                   key: REDIS-PASSWORD
-            - name: JWT-SECRET
+            - name: SPRING_DATA_REDIS_SENTINEL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omnimfa-secret
+                  key: REDIS-PASSWORD
+            - name: SPRING_DATA_REDIS_DATABASE
+              value: "1"
+            - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: omnimfa-secret

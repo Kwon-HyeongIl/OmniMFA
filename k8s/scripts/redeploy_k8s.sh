@@ -1,10 +1,10 @@
-# 실행 명령어: ./k8s/local-only/scripts/redeploy_k8s.sh
+# 실행 명령어: ./k8s/scripts/redeploy_k8s.sh
 
 set -e
 
 
 # 1. Docker Hub 로그인
-./k8s/local-only/scripts/docker_login.sh
+./k8s/scripts/docker_login.sh
 
 # 2. 변경된 서비스 탐색
 echo "변경된 서비스만 재배포 시작"
@@ -26,12 +26,16 @@ fi
 # 3. 변경된 서비스 빌드 및 배포
 echo "배포 대상: ${TARGET_SERVICES[*]}"
 for service in "${TARGET_SERVICES[@]}"; do
-    echo "[$service] 재배포 진행 중..."
-    IMAGE_NAME="kwonhyeongil/$service:latest"
-    docker build -t $IMAGE_NAME --build-arg SERVICE_NAME=$service .
-    docker push $IMAGE_NAME
-    kubectl rollout restart deployment ${service}-depl -n service
-    echo "[$service] 완료"
+    (
+        echo "[$service] 재배포 진행 중..."
+        IMAGE_NAME="kwonhyeongil/$service:latest"
+        docker build -t $IMAGE_NAME --build-arg SERVICE_NAME=$service .
+        docker push $IMAGE_NAME
+        kubectl rollout restart deployment ${service}-depl -n service
+        echo "[$service] 완료"
+    ) &
 done
+
+wait
 
 echo "모든 서비스 재배포 요청 완료."
