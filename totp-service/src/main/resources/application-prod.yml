@@ -28,6 +28,15 @@ management:
       exposure:
         include: health
 
-eureka:
+cloud:
+  openfeign:
+    client:
+      config:
+        onboarding-service:
+          url: http://onboarding-k8ssvc:80
+
+grpc:
   client:
-    enabled: false
+    onboarding-service:
+      address: static://onboarding-k8ssvc:9090
+      negotiation-type: plaintext

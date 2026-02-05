@@ -6,12 +6,6 @@ spring:
   application:
     name: onboarding-service
 
-  data:
-    redis:
-      host: redis-k8ssvc
-      port: 6379
-      database: 1 # 제품 인증 정보 캐시
-
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${DATASOURCE-URL}

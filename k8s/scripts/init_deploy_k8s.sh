@@ -8,24 +8,33 @@ echo "로컬 쿠버네티스 초기 배포 시작"
 ./k8s/scripts/docker_login.sh
 
 # 2. 네임스페이스 생성
-echo "네임스페이스 생성중..."
+echo "네임스페이스 생성 중..."
 kubectl apply -f k8s/namespace/service_namespace.yml
 kubectl apply -f k8s/namespace/infra_namespace.yml
 
-# 3. 시크릿 생성
-echo "시크릿 생성중..."
+# 3. Ingress Controller 설치
+echo "NGINX Ingress Controller 설치 중..."
+./helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+./helm repo update
+
+./helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
+  --namespace infra \
+  --wait
+
+# 4. 시크릿 생성
+echo "시크릿 생성 중..."
 ./k8s/secret/create_secret.sh
 
-# 4. 인프라 자원 배포
-echo "인프라 자원 배포중..."
+# 5. 인프라 자원 배포
+echo "인프라 자원 배포 중..."
 kubectl apply -f k8s/infra/db/mysql.yml
 kubectl apply -f k8s/infra/monitoring/rbac.yml
 kubectl apply -f k8s/infra/monitoring/prometheus.yml
 kubectl apply -f k8s/infra/monitoring/grafana.yml
 kubectl apply -f k8s/infra/monitoring/metrics-server.yml
 
-# 5. Redis (Sentinel) 설치
-echo "Redis (Sentinel) 설치중..."
+# 6. Redis (Sentinel) 설치
+echo "Redis (Sentinel) 설치 중..."
 ./helm repo add bitnami https://charts.bitnami.com/bitnami
 ./helm repo update
 ./helm upgrade --install redis bitnami/redis -n infra \
@@ -35,8 +44,8 @@ echo "Redis (Sentinel) 설치중..."
   --set auth.existingSecretPasswordKey=REDIS-PASSWORD \
   --wait
 
-# 6. 서비스 빌드
-echo "서비스 빌드중..."
+# 7. 서비스 빌드
+echo "서비스 빌드 중..."
 services=("apigateway-service" "security-service" "onboarding-service" "totp-service")
 for service in "${services[@]}"; do
     (
@@ -48,8 +57,17 @@ done
 
 wait
 
-# 7. 서비스 배포
-echo "서비스 배포중..."
-kubectl apply -R -f k8s/service/ -n service
+# 8. 서비스 배포
+echo "서비스 배포 중..."
+kubectl apply -f k8s/service/depl/
+
+# 9. Ingress 적용
+echo "Ingress 리소스 배포 중..."
+kubectl apply -f k8s/infra/network/ingress.yml
+
+# 10. Grafana 포트 포워딩 (Background)
+echo "Grafana 포트 포워딩 설정 중..."
+lsof -ti:3000 | xargs kill -9 2>/dev/null || true
+nohup kubectl port-forward -n infra svc/grafana-k8ssvc 3000:3000 > /dev/null 2>&1 &
 
 echo "배포 완료"

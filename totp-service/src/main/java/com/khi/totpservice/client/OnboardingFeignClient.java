@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Optional;
 
-@FeignClient(name = "onboarding-service", url = "http://onboarding-service:8080")
+@FeignClient(name = "onboarding-service", url = "http://onboarding-k8ssvc:80")
 public interface OnboardingFeignClient {
 
     @GetMapping("/onboarding/product/internal/{productId}/name")
