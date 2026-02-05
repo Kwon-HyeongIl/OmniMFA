@@ -50,8 +50,8 @@ public class ProductService {
     }
 
     public Optional<String> getProductNameByProductId(String productId) {
-        
+
         return productRepository.findById(productId)
-                .map(ProductEntity::getProductName);
+            .map(ProductEntity::getProductName);
     }
 }
