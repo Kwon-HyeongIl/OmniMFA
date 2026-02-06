@@ -78,8 +78,7 @@ public class LatencyTestController {
 
         log.info("REST Load Test Completed. RPS: {}, Avg: {} ms, Total: {}", String.format("%.2f", rps),
                 String.format("%.4f", avgLatencyMs), totalCount);
-        return String.format("REST (Conn Pool) - Total: %d, TPS: %.2f, Avg Latency: %.4f ms", totalCount, rps,
-                avgLatencyMs);
+        return String.format("평균 지연시간: %.4f ms", avgLatencyMs);
     }
 
     @PostMapping("/grpc/setup")
@@ -131,7 +130,6 @@ public class LatencyTestController {
 
         log.info("gRPC Load Test Completed. RPS: {}, Avg: {} ms, Total: {}", String.format("%.2f", rps),
                 String.format("%.4f", avgLatencyMs), totalCount);
-        return String.format("gRPC (Multiplexing) - Total: %d, TPS: %.2f, Avg Latency: %.4f ms", totalCount, rps,
-                avgLatencyMs);
+        return String.format("평균 지연시간: %.4f ms", avgLatencyMs);
     }
 }
