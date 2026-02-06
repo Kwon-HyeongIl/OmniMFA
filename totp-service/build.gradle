@@ -27,8 +27,7 @@ dependencies {
     /* Security */
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
-    /* Eureka */
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
 
     /* Feign */
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'

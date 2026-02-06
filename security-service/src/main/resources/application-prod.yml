@@ -6,12 +6,6 @@ spring:
   application:
     name: security-service
 
-  data:
-    redis:
-      host: redis-k8ssvc
-      port: 6379
-      database: 0 # 리프레시 토큰 캐시
-
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${DATASOURCE-URL}

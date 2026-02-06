@@ -28,71 +28,108 @@ public class LatencyTestController {
     @GrpcClient("onboarding-service")
     private ProductGrpcServiceGrpc.ProductGrpcServiceBlockingStub productGrpcServiceBlockingStub;
 
-    @PostMapping("/rest/setup")
-    public String latencyTestWithRest(@RequestHeader("Product-Id") String productId) {
-        StringBuilder result = new StringBuilder("REST (Feign) Latency Test (100,000 iterations):\n");
-        long totalDuration = 0;
+    private static final int CONCURRENCY = 100; // 동시 요청 사용자 수
+    private static final long TEST_DURATION_SECONDS = 10; // 테스트 지속 시간
 
-        // Warm-up (첫 요청은 초기화 비용 때문에 느리므로 제외)
-        onboardingFeignClient.getProductNameByProductId(productId).orElse("Unknown");
-        log.info("REST Warm-up complete");
+    @PostMapping("/rest/setup")
+    public String latencyTestWithRest(@RequestHeader("Product-Id") String productId) throws InterruptedException {
 
         Timer timer = Timer.builder("totp.loadtest.latency")
                 .tag("type", "개선 전 (REST 방식)")
                 .publishPercentileHistogram()
                 .register(meterRegistry);
 
-        for (int i = 1; i <= 100000; i++) {
-            long startTime = System.nanoTime();
-            String productName = onboardingFeignClient.getProductNameByProductId(productId).orElse("Unknown");
-            long endTime = System.nanoTime();
+        java.util.concurrent.atomic.AtomicLong totalRequests = new java.util.concurrent.atomic.AtomicLong(0);
+        long endTime = System.currentTimeMillis() + (TEST_DURATION_SECONDS * 1000);
 
-            long durationNs = endTime - startTime;
-            timer.record(durationNs, TimeUnit.NANOSECONDS);
+        java.util.concurrent.ExecutorService executor = java.util.concurrent.Executors.newFixedThreadPool(CONCURRENCY);
+        java.util.concurrent.CountDownLatch latch = new java.util.concurrent.CountDownLatch(CONCURRENCY);
 
-            totalDuration += durationNs;
+        long startTimeGlobal = System.nanoTime();
+
+        for (int i = 0; i < CONCURRENCY; i++) {
+            executor.submit(() -> {
+                try {
+                    while (System.currentTimeMillis() < endTime) {
+                        long start = System.nanoTime();
+                        try {
+                            onboardingFeignClient.getProductNameByProductId(productId).orElse("Unknown");
+                            long end = System.nanoTime();
+                            timer.record(end - start, TimeUnit.NANOSECONDS);
+                            totalRequests.incrementAndGet();
+                        } catch (Exception e) {
+                            log.error("REST request failed", e);
+                        }
+                    }
+                } finally {
+                    latch.countDown();
+                }
+            });
         }
 
-        double average = (totalDuration / 100000.0) / 1_000_000.0;
-        log.info("REST Average Latency (excl. warmup): {} ms", average);
-        result.append(String.format("평균 (100,000 회): %.4f ms", average));
+        latch.await();
+        long endTimeGlobal = System.nanoTime();
+        executor.shutdown();
 
-        return result.toString();
+        double totalSeconds = (endTimeGlobal - startTimeGlobal) / 1_000_000_000.0;
+        long totalCount = totalRequests.get();
+        double rps = totalCount / totalSeconds;
+        double avgLatencyMs = timer.mean(TimeUnit.MILLISECONDS);
+
+        log.info("REST Load Test Completed. RPS: {}, Avg: {} ms, Total: {}", String.format("%.2f", rps),
+                String.format("%.4f", avgLatencyMs), totalCount);
+        return String.format("평균 지연시간: %.4f ms", avgLatencyMs);
     }
 
     @PostMapping("/grpc/setup")
-    public String latencyTestWithGrpc(@RequestHeader("Product-Id") String productId) {
-        StringBuilder result = new StringBuilder("gRPC Latency Test (100,000 iterations):\n");
-        long totalDuration = 0;
+    public String latencyTestWithGrpc(@RequestHeader("Product-Id") String productId) throws InterruptedException {
 
-        ProductRequest grpcRequest = ProductRequest.newBuilder()
-                .setProductId(productId)
-                .build();
-
-        // Warm-up
-        productGrpcServiceBlockingStub.getProductName(grpcRequest).getProductName();
-        log.info("gRPC Warm-up complete");
+        ProductRequest grpcRequest = ProductRequest.newBuilder().setProductId(productId).build();
 
         Timer timer = Timer.builder("totp.loadtest.latency")
                 .tag("type", "개선 후 (gRPC 방식)")
                 .publishPercentileHistogram()
                 .register(meterRegistry);
 
-        for (int i = 1; i <= 100000; i++) {
-            long startTime = System.nanoTime();
-            String productName = productGrpcServiceBlockingStub.getProductName(grpcRequest).getProductName();
-            long endTime = System.nanoTime();
+        java.util.concurrent.atomic.AtomicLong totalRequests = new java.util.concurrent.atomic.AtomicLong(0);
+        long endTime = System.currentTimeMillis() + (TEST_DURATION_SECONDS * 1000);
 
-            long durationNs = endTime - startTime;
-            timer.record(durationNs, TimeUnit.NANOSECONDS);
+        java.util.concurrent.ExecutorService executor = java.util.concurrent.Executors.newFixedThreadPool(CONCURRENCY);
+        java.util.concurrent.CountDownLatch latch = new java.util.concurrent.CountDownLatch(CONCURRENCY);
 
-            totalDuration += durationNs;
+        long startTimeGlobal = System.nanoTime();
+
+        for (int i = 0; i < CONCURRENCY; i++) {
+            executor.submit(() -> {
+                try {
+                    while (System.currentTimeMillis() < endTime) {
+                        long start = System.nanoTime();
+                        try {
+                            productGrpcServiceBlockingStub.getProductName(grpcRequest).getProductName();
+                            long end = System.nanoTime();
+                            timer.record(end - start, TimeUnit.NANOSECONDS);
+                            totalRequests.incrementAndGet();
+                        } catch (Exception e) {
+                            log.error("gRPC request failed", e);
+                        }
+                    }
+                } finally {
+                    latch.countDown();
+                }
+            });
         }
 
-        double average = (totalDuration / 100000.0) / 1_000_000.0;
-        log.info("gRPC Average Latency (excl. warmup): {} ms", average);
-        result.append(String.format("평균 (100,000 회): %.4f ms", average));
+        latch.await();
+        long endTimeGlobal = System.nanoTime();
+        executor.shutdown();
 
-        return result.toString();
+        double totalSeconds = (endTimeGlobal - startTimeGlobal) / 1_000_000_000.0;
+        long totalCount = totalRequests.get();
+        double rps = totalCount / totalSeconds;
+        double avgLatencyMs = timer.mean(TimeUnit.MILLISECONDS);
+
+        log.info("gRPC Load Test Completed. RPS: {}, Avg: {} ms, Total: {}", String.format("%.2f", rps),
+                String.format("%.4f", avgLatencyMs), totalCount);
+        return String.format("평균 지연시간: %.4f ms", avgLatencyMs);
     }
 }

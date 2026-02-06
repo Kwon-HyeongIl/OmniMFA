@@ -30,8 +30,7 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
-    /* Eureka */
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
 
     /* Health */
     implementation 'org.springframework.boot:spring-boot-starter-actuator'

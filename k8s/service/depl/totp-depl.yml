@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: totp-service-depl
+  namespace: service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: totp-service-depl
+  template:
+    metadata:
+      labels:
+        app: totp-service-depl
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8080"
+    spec:
+      containers:
+        - name: totp-container
+          image: kwonhyeongil/totp-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: "1"
+              memory: "500Mi"
+            requests:
+              cpu: "0.5"
+              memory: "250Mi"
+          env:
+            - name: SERVER_PORT
+              value: "8080"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql-k8ssvc.infra.svc.cluster.local:3306/totp?useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "root"
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omnimfa-secret
+                  key: MYSQL-PASSWORD
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: omnimfa-secret
+                  key: JWT-SECRET
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: totp-k8ssvc
+  namespace: service
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: totp-service-depl

@@ -1,1 +1,5 @@
-docker-compose.yml
+
+helm
+
+k8s/secret/
+k8s/scripts/docker_login.sh

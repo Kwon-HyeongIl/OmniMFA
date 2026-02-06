@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigateway-service-depl
+  namespace: service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apigateway-service-depl
+  template:
+    metadata:
+      labels:
+        app: apigateway-service-depl
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8080"
+    spec:
+      containers:
+        - name: apigateway-container
+          image: kwonhyeongil/apigateway-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: "1"
+              memory: "500Mi"
+            requests:
+              cpu: "0.5"
+              memory: "250Mi"
+          env:
+            - name: SERVER_PORT
+              value: "8080"
+            - name: SPRING_DATA_REDIS_SENTINEL_MASTER
+              value: "mymaster"
+            - name: SPRING_DATA_REDIS_SENTINEL_NODES
+              value: "redis.infra.svc.cluster.local:26379"
+            - name: SPRING_DATA_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omnimfa-secret
+                  key: REDIS-PASSWORD
+            - name: SPRING_DATA_REDIS_SENTINEL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omnimfa-secret
+                  key: REDIS-PASSWORD
+            - name: SPRING_DATA_REDIS_DATABASE
+              value: "1"
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: omnimfa-secret
+                  key: JWT-SECRET
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apigateway-k8ssvc
+  namespace: service
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: apigateway-service-depl

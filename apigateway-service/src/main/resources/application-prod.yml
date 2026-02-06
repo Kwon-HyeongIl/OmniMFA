@@ -6,12 +6,6 @@ spring:
   application:
     name: apigateway-service
 
-  data:
-    redis:
-      host: redis-k8ssvc
-      port: 6379
-      database: 1 # 제품 인증 정보 캐시
-
   cloud:
     gateway:
       server:
@@ -30,7 +24,7 @@ spring:
                 - Path=/api/v1/security/v3/api-docs/**, /api/v1/security/swagger-ui/**
               filters:
                 - StripPrefix=3
-              uri: http://security-k8ssvc
+              uri: http://security-k8ssvc:80
               order: 0
 
             - id: onboarding-service-swagger
@@ -38,7 +32,7 @@ spring:
                 - Path=/api/v1/onboarding/v3/api-docs/**, /api/v1/onboarding/swagger-ui/**
               filters:
                 - StripPrefix=3
-              uri: http://onboarding-k8ssvc
+              uri: http://onboarding-k8ssvc:80
               order: 0
 
             - id: totp-service-swagger
@@ -46,7 +40,7 @@ spring:
                 - Path=/api/v1/totp/v3/api-docs/**, /api/v1/totp/swagger-ui/**
               filters:
                 - StripPrefix=3
-              uri: http://totp-k8ssvc
+              uri: http://totp-k8ssvc:80
               order: 0
 
             # Service
@@ -55,7 +49,7 @@ spring:
                 - Path=/api/v1/security/**
               filters:
                 - StripPrefix=2
-              uri: http://security-k8ssvc
+              uri: http://security-k8ssvc:80
               order: 1
 
             - id: onboarding-service
@@ -63,7 +57,7 @@ spring:
                 - Path=/api/v1/onboarding/**
               filters:
                 - StripPrefix=2
-              uri: http://onboarding-k8ssvc
+              uri: http://onboarding-k8ssvc:80
               order: 1
 
             - id: totp-service
@@ -71,7 +65,7 @@ spring:
                 - Path=/api/v1/totp/**
               filters:
                 - StripPrefix=2
-              uri: http://totp-k8ssvc
+              uri: http://totp-k8ssvc:80
               order: 1
 
 management:
@@ -101,4 +95,4 @@ jwt:
 # 제품 인증 정보를 가져와서 Redis에 저장하기 위함
 onboarding:
   service:
-    url: http://onboarding-k8ssvc
+    url: http://onboarding-k8ssvc:80

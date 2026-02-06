@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: omnimfa-ingress
+  namespace: service
+  # annotations:
+    # cert-manager.io/cluster-issuer: omnimfa-issuer # ClusterIssuer-name (Production Only)
+spec:
+  ingressClassName: nginx
+  # tls:
+    # - hosts:
+        # - www.omnimfa.cloud
+      # secretName: omnimfa-com-tls # Certificate SecretName
+  rules:
+    # - host: www.omnimfa.cloud
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: apigateway-k8ssvc
+                port:
+                  number: 80

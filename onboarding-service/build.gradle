@@ -28,8 +28,7 @@ dependencies {
 	/* Security */
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
-	/* Eureka */
-	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
 
 	/* Secret */
 	implementation 'org.apache.commons:commons-lang3:3.12.0'
