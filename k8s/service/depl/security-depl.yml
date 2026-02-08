@@ -47,8 +47,6 @@ spec:
                 secretKeyRef:
                   name: omnimfa-secret
                   key: REDIS-PASSWORD
-            - name: SPRING_DATA_REDIS_DATABASE
-              value: "0"
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:mysql://mysql-k8ssvc.infra.svc.cluster.local:3306/security?useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true"
             - name: SPRING_DATASOURCE_USERNAME

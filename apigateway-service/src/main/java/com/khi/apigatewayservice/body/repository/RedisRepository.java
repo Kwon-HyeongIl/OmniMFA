@@ -12,10 +12,10 @@ public class RedisRepository {
     private final ReactiveStringRedisTemplate reactiveRedisTemplate;
 
     public Mono<String> getHashedSecretByProductId(String productId) {
-        return reactiveRedisTemplate.opsForValue().get(productId);
+        return reactiveRedisTemplate.opsForValue().get("product:auth:" + productId);
     }
 
     public Mono<Boolean> saveHashedSecretByProductId(String productId, String hashedSecret) {
-        return reactiveRedisTemplate.opsForValue().set(productId, hashedSecret);
+        return reactiveRedisTemplate.opsForValue().set("product:auth:" + productId, hashedSecret);
     }
 }

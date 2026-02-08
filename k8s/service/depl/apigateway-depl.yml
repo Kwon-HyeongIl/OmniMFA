@@ -47,8 +47,6 @@ spec:
                 secretKeyRef:
                   name: omnimfa-secret
                   key: REDIS-PASSWORD
-            - name: SPRING_DATA_REDIS_DATABASE
-              value: "1"
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:

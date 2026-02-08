@@ -20,17 +20,17 @@ public class RedisRepository {
 
     public void saveRefreshToken(String uid, String refreshToken) {
 
-        redisTemplate.opsForValue().set(uid, refreshToken, REFRESH_TOKEN_TTL, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set("auth:refresh:" + uid, refreshToken, REFRESH_TOKEN_TTL, TimeUnit.MILLISECONDS);
         log.info("Redis에 새로운 Refresh 토큰 저장 완료");
     }
 
     public String getRefreshToken(String uid) {
-        return redisTemplate.opsForValue().get(uid);
+        return redisTemplate.opsForValue().get("auth:refresh:" + uid);
     }
 
     public void deleteRefreshToken(String uid) {
 
-        redisTemplate.delete(uid);
+        redisTemplate.delete("auth:refresh:" + uid);
         log.info("Redis에서 기존 Refresh 토큰 삭제 완료");
     }
 }

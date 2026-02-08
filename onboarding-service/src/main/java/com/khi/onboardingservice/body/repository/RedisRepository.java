@@ -15,7 +15,7 @@ public class RedisRepository {
 
     public void saveProductAuth(String productId, String hashedProductSecret) {
 
-        redisTemplate.opsForValue().set(productId, hashedProductSecret);
+        redisTemplate.opsForValue().set("product:auth:" + productId, hashedProductSecret);
         log.info("Redis에 새로운 제품 인증 정보 저장 완료");
     }
 }
