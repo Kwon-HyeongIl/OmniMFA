@@ -1,6 +1,6 @@
 # OmniMFA
 
-![Image](https://github.com/user-attachments/assets/b70602af-f9a5-4976-94d0-9123d4680627)
+![Image](https://github.com/user-attachments/assets/d8e03e74-a678-4852-a3b6-0e9b63faed8c)
 
 <br>
 
@@ -24,10 +24,8 @@ OmniMFA를 이용하는 서비스의 개발팀은 짧은 시간에 연동을 완
 - 토큰: **JWT**
 
 ### 데이터 & 메시징
-- 데이터베이스: **MySQL (Amazon RDS)**
+- 데이터베이스: **MySQL (Amazon RDS), Redis (EKS 클러스터 내 Deployment)**
 - ORM: **Sprint Data JPA**
-- 캐시: **Redis (EKS 클러스터 내 Deployment)**
-- 메시지 브로커: **Kafka (EKS 클러스터 내 Deployment, Zookeeper 포함)**
 
 ### 인프라 & 배포
 - 플랫폼: **Amazon EKS (Kubernetes)**
