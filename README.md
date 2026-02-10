@@ -1,6 +1,6 @@
 # OmniMFA
 
-![Image](https://github.com/user-attachments/assets/d8e03e74-a678-4852-a3b6-0e9b63faed8c)
+![Image](https://github.com/user-attachments/assets/61b26ddc-75dc-4d56-b51f-ff49270c489b)
 
 <br>
 
