@@ -11,10 +11,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import net.devh.boot.grpc.client.inject.GrpcClient;
 
 import com.khi.totpservice.body.entity.TotpClientEntity;
 import com.khi.totpservice.body.repository.TotpClientRepository;
-import com.khi.totpservice.client.OnboardingFeignClient;
 
 import static dev.samstevens.totp.util.Utils.getDataUriForImage;
 
@@ -24,22 +25,15 @@ import static dev.samstevens.totp.util.Utils.getDataUriForImage;
 public class SetupService {
 
     private final TotpClientRepository totpClientRepository;
-    private final OnboardingFeignClient onboardingFeignClient;
 
-    @net.devh.boot.grpc.client.inject.GrpcClient("onboarding-service")
+    @GrpcClient("onboarding-service")
     private com.khi.product.grpc.ProductGrpcServiceGrpc.ProductGrpcServiceBlockingStub productGrpcServiceBlockingStub;
 
+    @Transactional
     public String generateQrCode(String productId, String productClientUid) {
 
         SecretGenerator secretGenerator = new DefaultSecretGenerator();
         String totpSecretKey = secretGenerator.generate();
-
-        TotpClientEntity client = new TotpClientEntity();
-        client.setProductId(productId);
-        client.setProductClientUid(productClientUid);
-        client.setTotpSecretKey(totpSecretKey);
-        client.setEnabled(true);
-        totpClientRepository.save(client);
 
         // gRPC를 사용하여 제품 이름 조회
         log.info("gRPC 요청 송신 시작");
@@ -49,6 +43,13 @@ public class SetupService {
 
         String productName = productGrpcServiceBlockingStub.getProductName(grpcRequest).getProductName();
         log.info("gRPC 요청 수신 완료");
+
+        TotpClientEntity client = new TotpClientEntity();
+        client.setProductId(productId);
+        client.setProductClientUid(productClientUid);
+        client.setTotpSecretKey(totpSecretKey);
+        client.setEnabled(true);
+        totpClientRepository.save(client);
 
         QrData data = new QrData.Builder()
                 .label(productName + ":" + productClientUid)
